@@ -15,8 +15,7 @@ public class Controller {
         CalorieAndExercise botCAE = new CalorieAndExercise();
         try {
             botAPI.registerBot(botCAE);
-        }
-        catch (TelegramApiException e) {
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }

@@ -10,24 +10,31 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
     //@Override
     public void onUpdateReceived(Update update) {
+
         if (update.hasMessage() && update.getMessage().hasText()) {
+
             String inMessage = update.getMessage().getText();
             SendMessage outMessage = new SendMessage();
 
-            if (inMessage.equals("/apple")) {
+            outMessage.setChatId(update.getMessage().getChatId());
 
-                //System.out.println(update.getMessage().getFrom().getFirstName());
+
+            if (inMessage.equals("/banana")) {
 
                 outMessage.setText("Banana:\n100 calories");
             }
 
-            if (inMessage.equals("/banana")) {
+            if (inMessage.equals("/apple")) {
 
-                // System.out.println(update.getMessage().getFrom().getLastName());
+
                 outMessage.setText("Apple:\n52 calories");
             }
 
-            outMessage.setChatId(update.getMessage().getChatId());
+            // Для уникнення помилки:  "Text parameter can't be empty in method: SendMessage"
+            if (!
+                    inMessage.equals("/apple") && !inMessage.equals("/banana")) {
+                outMessage.setText("Not found!\nSorry!");
+            }
 
             try {
                 execute(outMessage);
@@ -40,12 +47,11 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
-    //@Override
-    public String getBotUsername () {
+    public String getBotUsername() {
         return "CalorieAndExerciseBot";
     }
 
-    public String getBotToken () {
+    public String getBotToken() {
         return "572301838:AAEECuKTjMdipxaryku0FHijPZMohHHjO60";
     }
 
