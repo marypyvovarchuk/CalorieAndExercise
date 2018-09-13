@@ -12,7 +12,7 @@ public class Controller {
         ApiContextInitializer.init();
         TelegramBotsApi botAPI = new TelegramBotsApi();
         // for bot registration
-        CalorieAndExercise botCAE = CalorieAndExercise();
+        CalorieAndExercise botCAE = new CalorieAndExercise();
         try {
             botAPI.registerBot(botCAE);
         }
