@@ -1,8 +1,11 @@
 package bot;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -10,6 +13,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * CalorieAndExercise is a Telegram bot
@@ -23,6 +27,7 @@ import java.util.List;
 
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
+    public Water water = new Water();
 
     public void onUpdateReceived(Update update) {
 
@@ -47,10 +52,17 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         outMessage.enableMarkdown(true);
 
         if (messageText.equals("Water")) {
-            outMessage.setText("You wanna add water!");
-        } else {
+
+
+             WaterAdd(update);
+
+        }
+        else {
             if (messageText.equals("Food")) {
+
                 outMessage.setText("You wanna add food!");
+
+
             } else {
                 if (messageText.equals("Exercise")) {
                     outMessage.setText("You wanna add exercise!");
@@ -91,6 +103,35 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
         return outMessage;
+    }
+
+    public void FoodAdd() {
+        Food meal = new Food();
+
+    }
+
+    public void WaterAdd(Update update) {
+
+            Water waterBalance = new Water();
+            Message message = update.getMessage();
+            String msggggg = message.getText();
+
+        SendMessage sm = new SendMessage();
+            int msgText = waterBalance.getReply(msggggg);
+            sm.setText("Your water balance: " + msgText);
+
+            try {
+                execute(sm);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+
+
+
+    }
+
+    public void ExerciseAdd() {
+
     }
 
 
