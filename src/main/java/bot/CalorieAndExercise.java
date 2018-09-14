@@ -2,46 +2,72 @@ package bot;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * CalorieAndExercise is a Telegram bot
+ * used to count calories income, water
+ * balance and wasted energy.
+ *
+ * @author  Mary Pyvovarchuk
+ * @version 1.0
+ * @since   2018-09-14
+ */
 
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
-    //@Override
     public void onUpdateReceived(Update update) {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
 
-            String inMessage = update.getMessage().getText();
             SendMessage outMessage = new SendMessage();
 
             outMessage.setChatId(update.getMessage().getChatId());
+            outMessage.enableMarkdown(true);
+            outMessage.setText("It was start"); // тимчасова відповідь на натиск кнопки
+
+            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+
+            outMessage.setReplyMarkup(replyKeyboardMarkup);
+
+            replyKeyboardMarkup.setSelective(true);
+            replyKeyboardMarkup.setResizeKeyboard(true);
+            replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+            List<KeyboardRow> keyboard = new ArrayList<>();
+
+            KeyboardRow keyboardFirstRow = new KeyboardRow();
+            keyboardFirstRow.add(new KeyboardButton("Food"));
 
 
-            if (inMessage.equals("/banana")) {
-
-                outMessage.setText("Banana:\n100 calories");
-            }
-
-            if (inMessage.equals("/apple")) {
+            KeyboardRow keyboardSecondRow = new KeyboardRow();
+            keyboardSecondRow.add(new KeyboardButton("Exercise"));
 
 
-                outMessage.setText("Apple:\n52 calories");
-            }
+            KeyboardRow keyboardThirdRow = new KeyboardRow();
+            keyboardThirdRow.add(new KeyboardButton("Water"));
 
-            // Для уникнення помилки:  "Text parameter can't be empty in method: SendMessage"
-            if (!
-                    inMessage.equals("/apple") && !inMessage.equals("/banana")) {
-                outMessage.setText("Not found!\nSorry!");
-            }
+            keyboard.add(keyboardFirstRow);
+            keyboard.add(keyboardSecondRow);
+            keyboard.add(keyboardThirdRow);
+
+            replyKeyboardMarkup.setKeyboard(keyboard);
+
+            outMessage.setReplyMarkup(replyKeyboardMarkup);
 
             try {
                 execute(outMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-
 
         }
     }
