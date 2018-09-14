@@ -16,9 +16,9 @@ import java.util.List;
  * used to count calories income, water
  * balance and wasted energy.
  *
- * @author  Mary Pyvovarchuk
+ * @author Mary Pyvovarchuk
  * @version 1.0
- * @since   2018-09-14
+ * @since 2018-09-14
  */
 
 public class CalorieAndExercise extends TelegramLongPollingBot {
@@ -28,40 +28,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
 
-            SendMessage outMessage = new SendMessage();
-
-            outMessage.setChatId(update.getMessage().getChatId());
-            outMessage.enableMarkdown(true);
-            outMessage.setText("It was start"); // тимчасова відповідь на натиск кнопки
-
-            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-
-            outMessage.setReplyMarkup(replyKeyboardMarkup);
-
-            replyKeyboardMarkup.setSelective(true);
-            replyKeyboardMarkup.setResizeKeyboard(true);
-            replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-            List<KeyboardRow> keyboard = new ArrayList<>();
-
-            KeyboardRow keyboardFirstRow = new KeyboardRow();
-            keyboardFirstRow.add(new KeyboardButton("Food"));
-
-
-            KeyboardRow keyboardSecondRow = new KeyboardRow();
-            keyboardSecondRow.add(new KeyboardButton("Exercise"));
-
-
-            KeyboardRow keyboardThirdRow = new KeyboardRow();
-            keyboardThirdRow.add(new KeyboardButton("Water"));
-
-            keyboard.add(keyboardFirstRow);
-            keyboard.add(keyboardSecondRow);
-            keyboard.add(keyboardThirdRow);
-
-            replyKeyboardMarkup.setKeyboard(keyboard);
-
-            outMessage.setReplyMarkup(replyKeyboardMarkup);
+            SendMessage outMessage = replyOnKeyboard(update);
 
             try {
                 execute(outMessage);
@@ -70,6 +37,60 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             }
 
         }
+    }
+
+    public SendMessage replyOnKeyboard(Update update) {
+
+        SendMessage outMessage = new SendMessage();
+        String messageText = update.getMessage().getText();
+        outMessage.setChatId(update.getMessage().getChatId());
+        outMessage.enableMarkdown(true);
+
+        if (messageText.equals("Water")) {
+            outMessage.setText("You wanna add water!");
+        } else {
+            if (messageText.equals("Food")) {
+                outMessage.setText("You wanna add food!");
+            } else {
+                if (messageText.equals("Exercise")) {
+                    outMessage.setText("You wanna add exercise!");
+                } else {
+                    outMessage.setText("Hello!"); // тимчасова відповідь на натиск кнопки
+                }
+            }
+
+        }
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+
+        outMessage.setReplyMarkup(replyKeyboardMarkup);
+
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton("Food"));
+
+
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton("Exercise"));
+
+
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton("Water"));
+
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+        keyboard.add(keyboardThirdRow);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        outMessage.setReplyMarkup(replyKeyboardMarkup);
+
+        return outMessage;
     }
 
 
