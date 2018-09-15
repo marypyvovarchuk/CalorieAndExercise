@@ -1,6 +1,9 @@
 package bot;
 
+import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -14,6 +17,8 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static java.lang.Math.toIntExact;
 
 /**
  * CalorieAndExercise is a Telegram bot
@@ -31,6 +36,8 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
 
+        // SendMessage outMessage = new SendMessage();
+
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             SendMessage outMessage = replyOnKeyboard(update);
@@ -40,24 +47,45 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+        } else if (update.hasCallbackQuery()) {
+            // Set variables
 
+            String call_data = update.getCallbackQuery().getData();
+            long message_id = update.getCallbackQuery().getMessage().getMessageId();
+            long chat_id = update.getCallbackQuery().getMessage().getChatId();
+
+            if (call_data.equals("20")) {
+                String answer = "You want to add a tea!";
+                EditMessageText new_message = new EditMessageText()
+                        .setChatId(chat_id)
+                        .setMessageId(toIntExact(message_id))
+                        .setText(answer);
+                try {
+                    execute(new_message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
         }
     }
+
 
     public SendMessage replyOnKeyboard(Update update) {
 
         SendMessage outMessage = new SendMessage();
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
-        outMessage.enableMarkdown(true);
+        //  outMessage.enableMarkdown(true);
 
         if (messageText.equals("Water")) {
 
+            outMessage.setText("You wanna add food!");
+            WaterAdd(update, outMessage);
 
-             WaterAdd(update);
 
-        }
-        else {
+        } else {
             if (messageText.equals("Food")) {
 
                 outMessage.setText("You wanna add food!");
@@ -73,8 +101,14 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         }
 
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
+        return outMessage;
+    }
+
+
+    public void keyBoardStart(Update update) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        SendMessage outMessage = new SendMessage();
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
         replyKeyboardMarkup.setSelective(true);
@@ -102,30 +136,31 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
-        return outMessage;
     }
+
 
     public void FoodAdd() {
         Food meal = new Food();
 
     }
 
-    public void WaterAdd(Update update) {
 
-            Water waterBalance = new Water();
-            Message message = update.getMessage();
-            String msggggg = message.getText();
+    public void WaterAdd(Update update, SendMessage outMessage) {
 
-        SendMessage sm = new SendMessage();
-            int msgText = waterBalance.getReply(msggggg);
-            sm.setText("Your water balance: " + msgText);
 
-            try {
-                execute(sm);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+        rowInline.add(new InlineKeyboardButton().setText("Tea").setCallbackData("20"));
+        rowInline.add(new InlineKeyboardButton().setText("Coffee").setCallbackData("21"));
+        // Set the keyboard to the markup
+        // rowsInline.add(rowInline);
+        rowsInline.add(rowInline);
+        // Add it to the message
+        markupInline.setKeyboard(rowsInline);
+        outMessage.setReplyMarkup(markupInline);
 
+        outMessage.enableMarkdown(true);
 
 
     }
