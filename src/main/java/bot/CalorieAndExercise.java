@@ -39,8 +39,12 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         // SendMessage outMessage = new SendMessage();
 
         if (update.hasMessage() && update.getMessage().hasText()) {
+          //  keyBoardStart(update);
 
-            SendMessage outMessage = replyOnKeyboard(update);
+             SendMessage outMessage = replyOnKeyboard(update);
+
+
+
 
             try {
                 execute(outMessage);
@@ -54,8 +58,10 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             long message_id = update.getCallbackQuery().getMessage().getMessageId();
             long chat_id = update.getCallbackQuery().getMessage().getChatId();
 
-            if (call_data.equals("20")) {
-                String answer = "You want to add a tea!";
+            if (call_data.equals("200")) {
+               int amount = water.getReply(200);
+
+                String answer = "Your water balance:\n" + amount;
                 EditMessageText new_message = new EditMessageText()
                         .setChatId(chat_id)
                         .setMessageId(toIntExact(message_id))
@@ -68,6 +74,29 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
                 }
 
             }
+
+
+
+            if (call_data.equals("100")) {
+                int amount = water.getReply(100);
+
+                String answer = "Your water balance:\n" + amount;
+                EditMessageText new_message = new EditMessageText()
+                        .setChatId(chat_id)
+                        .setMessageId(toIntExact(message_id))
+                        .setText(answer);
+                try {
+                    execute(new_message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+
+
+
+
         }
     }
 
@@ -75,9 +104,50 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     public SendMessage replyOnKeyboard(Update update) {
 
         SendMessage outMessage = new SendMessage();
+
+
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
         //  outMessage.enableMarkdown(true);
+
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        //  SendMessage outMessage = new SendMessage();
+        outMessage.setReplyMarkup(replyKeyboardMarkup);
+
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton("Food"));
+
+
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton("Exercise"));
+
+
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton("Water"));
+
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+        keyboard.add(keyboardThirdRow);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        outMessage.setReplyMarkup(replyKeyboardMarkup);
+
+
+
+
+
+
+
+
+
 
         if (messageText.equals("Water")) {
 
@@ -100,6 +170,18 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             }
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         return outMessage;
@@ -151,8 +233,8 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(new InlineKeyboardButton().setText("Tea").setCallbackData("20"));
-        rowInline.add(new InlineKeyboardButton().setText("Coffee").setCallbackData("21"));
+        rowInline.add(new InlineKeyboardButton().setText("+200 мл").setCallbackData("200"));
+        rowInline.add(new InlineKeyboardButton().setText("+100 мл").setCallbackData("100"));
         // Set the keyboard to the markup
         // rowsInline.add(rowInline);
         rowsInline.add(rowInline);
