@@ -122,11 +122,11 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("Food"));
+        keyboardFirstRow.add(new KeyboardButton("Coffee"));
 
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("Exercise"));
+        keyboardSecondRow.add(new KeyboardButton("Tea"));
 
 
         KeyboardRow keyboardThirdRow = new KeyboardRow();
@@ -156,14 +156,16 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
         } else {
-            if (messageText.equals("Food")) {
+            if (messageText.equals("Coffee")) {
 
-                outMessage.setText("You wanna add food!");
+                outMessage.setText("You wanna add Coffee!");
+                WaterAdd(update, outMessage);
 
 
             } else {
-                if (messageText.equals("Exercise")) {
-                    outMessage.setText("You wanna add exercise!");
+                if (messageText.equals("Tea")) {
+                    outMessage.setText("You wanna add tea!");
+                    WaterAdd(update, outMessage);
                 } else {
                     outMessage.setText("Hello!"); // тимчасова відповідь на натиск кнопки
                 }
