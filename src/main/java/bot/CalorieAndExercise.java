@@ -33,6 +33,8 @@ import static java.lang.Math.toIntExact;
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
     public Water water = new Water();
+    public Food food = new Food();
+    public Exercise exercise = new Exercise();
 
     public void onUpdateReceived(Update update) {
 
@@ -43,14 +45,12 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
             SendMessage outMessage = replyOnKeyboard(update);
 
-
             try {
                 execute(outMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         } else if (update.hasCallbackQuery()) {
-            // Set variables
 
             String call_data = update.getCallbackQuery().getData();
             long message_id = update.getCallbackQuery().getMessage().getMessageId();
@@ -58,53 +58,51 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
 
+            int amount = countWater(call_data);
+
+            String answer = "Your water balance:\n" + amount;
+            EditMessageText new_message = new EditMessageText()
+                    .setChatId(chat_id)
+                    .setMessageId(toIntExact(message_id))
+                    .setText(answer);
 
 
+            try {
+                execute(new_message);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
 
-           // if (call_data.equals("100")) {
-                int amount = countWater (call_data);
-                        //water.getReply(100);
-
-                String answer = "Your water balance:\n" + amount;
-                EditMessageText new_message = new EditMessageText()
-                        .setChatId(chat_id)
-                        .setMessageId(toIntExact(message_id))
-                        .setText(answer);
-                try {
-                    execute(new_message);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-
-                }
-                }
-
-
+            }
         }
 
 
+    }
 
-    public int countWater (String call_data) {
-        int amount=0;
+
+    public int countWater(String call_data) {
+        int amount = 0;
 
         if (call_data.equals("100")) {
-            amount = water.getReply(100);
+            water.getReply(100);
+            amount = water.waterBalance;
             return amount;
         } else {
             if (call_data.equals("200")) {
-                amount = water.getReply(200);
+                water.getReply(200);
+                amount = water.waterBalance;
                 return amount;
 
             } else {
                 if (call_data.equals("250")) {
-                    amount = water.getReply(250);
+                    water.getReply(250);
+                    amount = water.waterBalance;
                     return amount;
-                }
-                else {
+                } else {
                     if (call_data.equals("500")) {
-                        amount = water.getReply(500);
+                        water.getReply(500);
+                        amount = water.waterBalance;
                         return amount;
-                    }
-                    else {
+                    } else {
                         return 0;
                     }
                 }
@@ -116,8 +114,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         }
 
 
-        //return 0;
-
     }
 
 
@@ -126,9 +122,13 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         SendMessage outMessage = new SendMessage();
 
 
+
+
+
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
 
+        String regex = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
 
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -179,7 +179,33 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
                     outMessage.setText("You wanna add tea!");
                     WaterAdd(update, outMessage);
                 } else {
-                    outMessage.setText("Hello!"); // тимчасова відповідь на натиск кнопки
+                    if (messageText.matches(regex)) {
+                      /*  System.out.print("match\n"); //
+
+                        water.getReply(Integer.parseInt(messageText));
+                        int amount = water.waterBalance;
+
+
+                        String answer = "Your water balance:\n" + amount;
+                       SendMessage sendMessage = new SendMessage();
+
+                       sendMessage.setText(answer);
+
+                        try {
+                            execute(sendMessage);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+
+                        }
+                        */
+
+
+
+
+                    }
+                    else {
+                        outMessage.setText("Hello!");
+                    }// тимчасова відповідь на натиск кнопки
                 }
             }
 
@@ -187,6 +213,28 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
         return outMessage;
+    }
+
+
+    public void FoodWeight (SendMessage outMessage) {
+
+        water.getReply(Integer.parseInt(messageText));
+        int amount = water.waterBalance;
+
+
+        String answer = "Your water balance:\n" + amount;
+        SendMessage sendMessage = new SendMessage();
+
+        sendMessage.setText(answer);
+
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+
+        }
+
+
     }
 
 

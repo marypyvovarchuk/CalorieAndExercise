@@ -10,9 +10,10 @@ public class Water extends Options {
     public int waterBalance=0;
     public Date lastDate = new Date();
 
-    public int getReply(int  waterCurrBalance) {
-       // String amount = update.getMessage().getText();
-       // int waterCurrBalance = Integer.parseInt(amount);
+    public void getReply(int  waterCurrBalance) {
+
+        Water obj = new Water();
+
         String lastWaterDate = formatDay(lastDate);
         if (controlDay(lastWaterDate)) {
             waterBalance += waterCurrBalance;
@@ -23,7 +24,7 @@ public class Water extends Options {
             Date rightNowDate = new Date();
             lastDate = rightNowDate;
         }
-        return waterBalance;
+       // return obj;
     }
 
 
