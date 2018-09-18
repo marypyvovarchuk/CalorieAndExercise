@@ -42,7 +42,7 @@ public class Food extends Options {
             Date rightNowDate = new Date();
             lastDate = rightNowDate;
         }
-       // return obj;
+
     }
 
 

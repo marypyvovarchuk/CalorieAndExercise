@@ -5,9 +5,7 @@ import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 /**
- * CalorieAndExercise is a Telegram bot
- * used to count calories income, water
- * balance and wasted energy.
+ * Initialize and register botAPI
  *
  * @author Mary Pyvovarchuk
  * @version 1.0

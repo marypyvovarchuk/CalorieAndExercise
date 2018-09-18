@@ -134,8 +134,14 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
 
+
+        // Range of water amount: [1;500] ml
         String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
+
+        // Range of exercise interval: [1;120] min
         String regexExe = "([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|120)";
+
+        // Range of meal weight: [1;1000] g
         String regexFood = "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1000)";
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -167,21 +173,21 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
-        switch (messageText) {
 
-            case "Water":
-            case "/water":
+        Menu menu = Menu.valueOf(messageText);
+
+        switch (menu) {
+            case Water:
                 outMessage.setText("Enter amount: \nExample: 100 ml");
                 break;
-            case "Exercise":
-            case "/exercise":
-                outMessage.setText("You want to add exercise");
+            case Exercise:
+                outMessage.setText("Enter interval: \nExample: 10 min");
                 break;
-            case "Food":
-            case "/food":
-                outMessage.setText("You want to add food");
+            case Food:
+                outMessage.setText("Enter weight: \nExample: 100 g");
                 break;
-
+            default:
+                outMessage.setText("Please, text correctly!");
         }
 
 
@@ -199,11 +205,9 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             } else {
                 if (replaceG(messageText).matches(regexFood)) {
                     // to do in case user enter meal weight
-                } else
-                    outMessage.setText("Please, text correctly!");
+                }
             }
         }
-
 
         return outMessage;
     }
