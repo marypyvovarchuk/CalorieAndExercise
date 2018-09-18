@@ -1,14 +1,9 @@
 package bot;
 
-import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.api.objects.CallbackQuery;
-import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -16,7 +11,6 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import static java.lang.Math.toIntExact;
 
@@ -33,32 +27,29 @@ import static java.lang.Math.toIntExact;
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
     public Water water = new Water();
-final String GREETINGS = "";
+    final String GREETINGS = "";
+    public Exercise exercise = new Exercise();
 
     public void onUpdateReceived(Update update) {
 
-        // SendMessage outMessage = new SendMessage();
-
         if (update.hasMessage() && update.getMessage().hasText()) {
-            //  keyBoardStart(update);
-            //SendMessage outMessage = new SendMessage();
+
 
             String message = update.getMessage().getText();
-           if( message.equals("/start")) {
+            if (message.equals("/start")) {
 
                 helloBot(update);
 
-           }
-else {
+            } else {
 
-               SendMessage outMessage = replyOnKeyboard(update);
-               try {
-                   execute(outMessage);
-               } catch (TelegramApiException e) {
-                   e.printStackTrace();
-               }
+                SendMessage outMessage = replyOnKeyboard(update);
+                try {
+                    execute(outMessage);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
 
-           }
+            }
 
 
         } else if (update.hasCallbackQuery()) {
@@ -66,7 +57,6 @@ else {
             String call_data = update.getCallbackQuery().getData();
             long message_id = update.getCallbackQuery().getMessage().getMessageId();
             long chat_id = update.getCallbackQuery().getMessage().getChatId();
-
 
 
             int amount = countWater(call_data);
@@ -86,25 +76,14 @@ else {
             }
         }
 
-
     }
 
 
-    public void helloBot (Update update) {
+    public void helloBot(Update update) {
+        SendMessage outMessage = new SendMessage();
 
-
-            SendMessage outMessage = new SendMessage();
-
-
-            //String messageText = update.getMessage().getText();
-            outMessage.setChatId(update.getMessage().getChatId());
-
-
-            outMessage.setText(GREETINGS);// instructions tp press calculate
-
-
-
-
+        outMessage.setChatId(update.getMessage().getChatId());
+        outMessage.setText(GREETINGS);
 
     }
 
@@ -152,16 +131,12 @@ else {
         SendMessage outMessage = new SendMessage();
 
 
-
-
-
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
 
-        messageText = replaceIt(messageText);
-
         String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
-       // String regexExe = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
+        String regexExe = "([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|120)";
+        String regexFood = "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1000)";
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
@@ -181,51 +156,51 @@ else {
         keyboardSecondRow.add(new KeyboardButton("Exercise"));
 
 
-        //KeyboardRow keyboardThirdRow = new KeyboardRow();
-       // keyboardThirdRow.add(new KeyboardButton("Water"));
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton("Food"));
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
-      //  keyboard.add(keyboardThirdRow);
+        keyboard.add(keyboardThirdRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
 
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
+        switch (messageText) {
 
-        if (messageText.equals("Water") || messageText.equals("/water")) {
+            case "Water":
+            case "/water":
+                outMessage.setText("Enter amount: \nExample: 100 ml");
+                break;
+            case "Exercise":
+            case "/exercise":
+                outMessage.setText("You want to add exercise");
+                break;
+            case "Food":
+            case "/food":
+                outMessage.setText("You want to add food");
+                break;
 
-            outMessage.setText("Enter amount: \nExample: 100 ml");
-         //  WaterAdd(update, outMessage);
-
-
-
-                } else {
-            if (messageText.equals("Exercise") || messageText.equals("/exercise")) {
-
-                WaterAdd(outMessage);
-
-            }
-
-
-            else {
-                if (messageText.matches(regexWater)) {
-                    System.out.print("match\n"); //
-
-                    water.getReply(Integer.parseInt(messageText));
-                    int amount = water.waterBalance;
+        }
 
 
-                    String answer = "Your water balance:\n" + amount;
-                    outMessage.setText(answer);
+        if (replaceMl(messageText).matches(regexWater)) {
 
+            water.getReply(Integer.parseInt(replaceMl(messageText)));
+            int amount = water.waterBalance;
 
+            String answer = "Your water balance:\n" + amount;
+            outMessage.setText(answer);
 
-
-                } else {
-                    outMessage.setText("Hello!");
-                }
-                // тимчасова відповідь на натиск кнопки
+        } else {
+            if (replaceMin(messageText).matches(regexExe)) {
+                // to do in case user enter interval of exercises
+            } else {
+                if (replaceG(messageText).matches(regexFood)) {
+                    // to do in case user enter meal weight
+                } else
+                    outMessage.setText("Please, text correctly!");
             }
         }
 
@@ -234,138 +209,69 @@ else {
     }
 
 
-    public String replaceIt (String reg  ) {
+    /**
+     * In case user added input as "~10~ min" to specify time
+     * spent working out, this method indicates correct Int value with time.
+     * Return String param used to calculate wasted energy.
+     * On other hand in case input would not be like "~10~ min"
+     * method will return the same String param.
+     *
+     * @param reg user input
+     * @return result String line with replaced substring containing "  min"
+     */
+    public String replaceMin(String reg) {
 
         if (reg.contains("ml")) {
 
-        String result= reg.replace(" ml", "");
+            String result = reg.replace(" min", "");
             return result;
-        }
-
-        else
+        } else
             return reg;
 
     }
 
 
+    /**
+     * Method is used in case user added input as "~200~ ml" which indicates
+     * current water income.
+     * Return String param used to calculate water balance.
+     * On other hand in case input would not be like "~200~ ml"
+     * method will return the same String param.
+     *
+     * @param reg user input
+     * @return result String line with replaced substring containing "  ml"
+     */
+    public String replaceMl(String reg) {
 
-   /* public void FoodWeight (SendMessage outMessage) {
+        if (reg.contains("ml")) {
 
-        water.getReply(Integer.parseInt(messageText));
-        int amount = water.waterBalance;
-
-
-        String answer = "Your water balance:\n" + amount;
-        SendMessage sendMessage = new SendMessage();
-
-        sendMessage.setText(answer);
-
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-
-        }
-
-
-    } */
-
-
-    public void keyBoardStart(Update update) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        SendMessage outMessage = new SendMessage();
-        outMessage.setReplyMarkup(replyKeyboardMarkup);
-
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-        List<KeyboardRow> keyboard = new ArrayList<>();
-
-        KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("Water"));
-
-
-        KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("Exercise"));
-
-
-      //..  KeyboardRow keyboardThirdRow = new KeyboardRow();
-       // keyboardThirdRow.add(new KeyboardButton("Water"));
-
-        keyboard.add(keyboardFirstRow);
-        keyboard.add(keyboardSecondRow);
-      //  keyboard.add(keyboardThirdRow);
-
-        replyKeyboardMarkup.setKeyboard(keyboard);
-
-        outMessage.setReplyMarkup(replyKeyboardMarkup);
+            String result = reg.replace(" ml", "");
+            return result;
+        } else
+            return reg;
 
     }
 
 
+    /**
+     * Method is used whereas user added input as "~100~ g" to specify amount
+     * of meal.
+     * Return String param whis os used used to calculate calories,
+     * carbs, fats and protein.
+     * On other hand in case input would not be like "~100~ g"
+     * method will return the same String param.
+     *
+     * @param reg user input
+     * @return result String line with replaced substring containing "  g"
+     */
+    public String replaceG(String reg) {
 
+        if (reg.contains("g")) {
 
-
-    public void WaterAdd( SendMessage outMessage) {
-
-
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(new InlineKeyboardButton().setText("5 min").setCallbackData("5"));
-        rowInline.add(new InlineKeyboardButton().setText("10 min").setCallbackData("10"));
-        rowInline.add(new InlineKeyboardButton().setText("15 min").setCallbackData("15"));
-        rowInline.add(new InlineKeyboardButton().setText("20 min").setCallbackData("20"));
-        rowInline.add(new InlineKeyboardButton().setText("30 min").setCallbackData("30"));
-        // Set the keyboard to the markup
-        // rowsInline.add(rowInline);
-        rowsInline.add(rowInline);
-        // Add it to the message
-        markupInline.setKeyboard(rowsInline);
-        outMessage.setReplyMarkup(markupInline);
-
-        outMessage.enableMarkdown(true);
-
-
-    }
-
-
-
-
-    public void WaterCount (SendMessage outMessage) {
-
-
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(new InlineKeyboardButton().setText("100 мл").setCallbackData("100"));
-        rowInline.add(new InlineKeyboardButton().setText("200 мл").setCallbackData("200"));
-        rowInline.add(new InlineKeyboardButton().setText("250 мл").setCallbackData("250"));
-        rowInline.add(new InlineKeyboardButton().setText("500 мл").setCallbackData("500"));
-
-        rowsInline.add(rowInline);
-
-        markupInline.setKeyboard(rowsInline);
-        outMessage.setReplyMarkup(markupInline);
-
-        outMessage.enableMarkdown(true);
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    public void ExerciseAdd() {
+            String result = reg.replace(" g", "");
+            return result;
+        } else
+            return reg;
 
     }
 
@@ -373,6 +279,7 @@ else {
     public String getBotUsername() {
         return "CalorieAndExerciseBot";
     }
+
 
     public String getBotToken() {
         return "572301838:AAEECuKTjMdipxaryku0FHijPZMohHHjO60";

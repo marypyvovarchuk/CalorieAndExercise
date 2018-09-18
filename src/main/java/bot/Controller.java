@@ -22,8 +22,8 @@ public class Controller {
         ApiContextInitializer.init();
         TelegramBotsApi botAPI = new TelegramBotsApi();
         // for bot registration
-          CalorieAndExercise botCAE1 = new CalorieAndExercise();
-        //CAE botCAE = new CAE();
+        CalorieAndExercise botCAE1 = new CalorieAndExercise();
+
         try {
             botAPI.registerBot(botCAE1);
         } catch (TelegramApiException e) {
