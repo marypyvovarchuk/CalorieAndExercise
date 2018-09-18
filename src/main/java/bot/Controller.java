@@ -9,9 +9,9 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
  * used to count calories income, water
  * balance and wasted energy.
  *
- * @author  Mary Pyvovarchuk
+ * @author Mary Pyvovarchuk
  * @version 1.0
- * @since   2018-09-14
+ * @since 2018-09-14
  */
 
 public class Controller {
@@ -22,9 +22,10 @@ public class Controller {
         ApiContextInitializer.init();
         TelegramBotsApi botAPI = new TelegramBotsApi();
         // for bot registration
-        CalorieAndExercise botCAE = new CalorieAndExercise();
+          CalorieAndExercise botCAE1 = new CalorieAndExercise();
+        //CAE botCAE = new CAE();
         try {
-            botAPI.registerBot(botCAE);
+            botAPI.registerBot(botCAE1);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

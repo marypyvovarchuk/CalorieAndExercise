@@ -7,12 +7,12 @@ import java.util.Date;
 
 public class Water extends Options {
 
-    public int waterBalance=0;
+    public int waterBalance = 0;
     public Date lastDate = new Date();
 
-    public void getReply(int  waterCurrBalance) {
+    public void getReply(int waterCurrBalance) {
 
-        Water obj = new Water();
+      //  Water obj = new Water();
 
         String lastWaterDate = formatDay(lastDate);
         if (controlDay(lastWaterDate)) {
@@ -24,8 +24,9 @@ public class Water extends Options {
             Date rightNowDate = new Date();
             lastDate = rightNowDate;
         }
-       // return obj;
+        // return obj;
     }
+
 
 
 }

@@ -33,8 +33,7 @@ import static java.lang.Math.toIntExact;
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
     public Water water = new Water();
-    public Food food = new Food();
-    public Exercise exercise = new Exercise();
+final String GREETINGS = "";
 
     public void onUpdateReceived(Update update) {
 
@@ -42,14 +41,26 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             //  keyBoardStart(update);
+            //SendMessage outMessage = new SendMessage();
 
-            SendMessage outMessage = replyOnKeyboard(update);
+            String message = update.getMessage().getText();
+           if( message.equals("/start")) {
 
-            try {
-                execute(outMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+                helloBot(update);
+
+           }
+else {
+
+               SendMessage outMessage = replyOnKeyboard(update);
+               try {
+                   execute(outMessage);
+               } catch (TelegramApiException e) {
+                   e.printStackTrace();
+               }
+
+           }
+
+
         } else if (update.hasCallbackQuery()) {
 
             String call_data = update.getCallbackQuery().getData();
@@ -74,6 +85,25 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
             }
         }
+
+
+    }
+
+
+    public void helloBot (Update update) {
+
+
+            SendMessage outMessage = new SendMessage();
+
+
+            //String messageText = update.getMessage().getText();
+            outMessage.setChatId(update.getMessage().getChatId());
+
+
+            outMessage.setText(GREETINGS);// instructions tp press calculate
+
+
+
 
 
     }
@@ -128,8 +158,10 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
 
-        String regex = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
+        messageText = replaceIt(messageText);
 
+        String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
+       // String regexExe = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
@@ -142,73 +174,59 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("Food"));
+        keyboardFirstRow.add(new KeyboardButton("Water"));
 
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton("Exercise"));
 
 
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardThirdRow.add(new KeyboardButton("Water"));
+        //KeyboardRow keyboardThirdRow = new KeyboardRow();
+       // keyboardThirdRow.add(new KeyboardButton("Water"));
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
-        keyboard.add(keyboardThirdRow);
+      //  keyboard.add(keyboardThirdRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
 
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
 
-        if (messageText.equals("Water")) {
+        if (messageText.equals("Water") || messageText.equals("/water")) {
 
-            outMessage.setText("You wanna add food!");
-            WaterAdd(update, outMessage);
-
-
-        } else {
-            if (messageText.equals("Coffee")) {
-
-                outMessage.setText("You wanna add Coffee!");
-                WaterAdd(update, outMessage);
+            outMessage.setText("Enter amount: \nExample: 100 ml");
+         //  WaterAdd(update, outMessage);
 
 
-            } else {
-                if (messageText.equals("Tea")) {
-                    outMessage.setText("You wanna add tea!");
-                    WaterAdd(update, outMessage);
+
                 } else {
-                    if (messageText.matches(regex)) {
-                      /*  System.out.print("match\n"); //
+            if (messageText.equals("Exercise") || messageText.equals("/exercise")) {
 
-                        water.getReply(Integer.parseInt(messageText));
-                        int amount = water.waterBalance;
+                WaterAdd(outMessage);
 
-
-                        String answer = "Your water balance:\n" + amount;
-                       SendMessage sendMessage = new SendMessage();
-
-                       sendMessage.setText(answer);
-
-                        try {
-                            execute(sendMessage);
-                        } catch (TelegramApiException e) {
-                            e.printStackTrace();
-
-                        }
-                        */
-
-
-
-
-                    }
-                    else {
-                        outMessage.setText("Hello!");
-                    }// тимчасова відповідь на натиск кнопки
-                }
             }
 
+
+            else {
+                if (messageText.matches(regexWater)) {
+                    System.out.print("match\n"); //
+
+                    water.getReply(Integer.parseInt(messageText));
+                    int amount = water.waterBalance;
+
+
+                    String answer = "Your water balance:\n" + amount;
+                    outMessage.setText(answer);
+
+
+
+
+                } else {
+                    outMessage.setText("Hello!");
+                }
+                // тимчасова відповідь на натиск кнопки
+            }
         }
 
 
@@ -216,7 +234,22 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
-    public void FoodWeight (SendMessage outMessage) {
+    public String replaceIt (String reg  ) {
+
+        if (reg.contains("ml")) {
+
+        String result= reg.replace(" ml", "");
+            return result;
+        }
+
+        else
+            return reg;
+
+    }
+
+
+
+   /* public void FoodWeight (SendMessage outMessage) {
 
         water.getReply(Integer.parseInt(messageText));
         int amount = water.waterBalance;
@@ -235,7 +268,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         }
 
 
-    }
+    } */
 
 
     public void keyBoardStart(Update update) {
@@ -250,19 +283,19 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("Food"));
+        keyboardFirstRow.add(new KeyboardButton("Water"));
 
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton("Exercise"));
 
 
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardThirdRow.add(new KeyboardButton("Water"));
+      //..  KeyboardRow keyboardThirdRow = new KeyboardRow();
+       // keyboardThirdRow.add(new KeyboardButton("Water"));
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
-        keyboard.add(keyboardThirdRow);
+      //  keyboard.add(keyboardThirdRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
 
@@ -271,28 +304,20 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
-    public void FoodChoose() {
-        Food meal = new Food();
-
-    }
 
 
-    public void FoodWeight() {
-        Food meal = new Food();
 
-    }
-
-
-    public void WaterAdd(Update update, SendMessage outMessage) {
+    public void WaterAdd( SendMessage outMessage) {
 
 
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(new InlineKeyboardButton().setText("100 мл").setCallbackData("100"));
-        rowInline.add(new InlineKeyboardButton().setText("200 мл").setCallbackData("200"));
-        rowInline.add(new InlineKeyboardButton().setText("250 мл").setCallbackData("250"));
-        rowInline.add(new InlineKeyboardButton().setText("500 мл").setCallbackData("500"));
+        rowInline.add(new InlineKeyboardButton().setText("5 min").setCallbackData("5"));
+        rowInline.add(new InlineKeyboardButton().setText("10 min").setCallbackData("10"));
+        rowInline.add(new InlineKeyboardButton().setText("15 min").setCallbackData("15"));
+        rowInline.add(new InlineKeyboardButton().setText("20 min").setCallbackData("20"));
+        rowInline.add(new InlineKeyboardButton().setText("30 min").setCallbackData("30"));
         // Set the keyboard to the markup
         // rowsInline.add(rowInline);
         rowsInline.add(rowInline);
@@ -304,6 +329,41 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
     }
+
+
+
+
+    public void WaterCount (SendMessage outMessage) {
+
+
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+        rowInline.add(new InlineKeyboardButton().setText("100 мл").setCallbackData("100"));
+        rowInline.add(new InlineKeyboardButton().setText("200 мл").setCallbackData("200"));
+        rowInline.add(new InlineKeyboardButton().setText("250 мл").setCallbackData("250"));
+        rowInline.add(new InlineKeyboardButton().setText("500 мл").setCallbackData("500"));
+
+        rowsInline.add(rowInline);
+
+        markupInline.setKeyboard(rowsInline);
+        outMessage.setReplyMarkup(markupInline);
+
+        outMessage.enableMarkdown(true);
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     public void ExerciseAdd() {
 
