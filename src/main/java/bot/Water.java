@@ -6,15 +6,12 @@ import java.util.Date;
  * Purpose of Water.java: provides
  * options used to count water balance
  * each new day.
- *
  */
 
 public class Water extends Options {
 
     public int waterBalance = 0;
     public Date lastDate = new Date();
-
-
 
     public void getReply(int waterCurrBalance) {
 
@@ -29,6 +26,4 @@ public class Water extends Options {
             lastDate = rightNowDate;
         }
     }
-
-
 }

@@ -25,7 +25,8 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
     private Water water = new Water();
     final String GREETINGS = "";
-    public Exercise exercise = new Exercise();
+    public Exercise currExerciseBalance = new Exercise();
+    public Food currMealBalance = new Food();
 
     public void onUpdateReceived(Update update) {
 
@@ -47,6 +48,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
     private void helloBot(Update update) {
+
         SendMessage outMessage = new SendMessage();
 
         outMessage.setChatId(update.getMessage().getChatId());
@@ -54,14 +56,20 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
+    /**
+     * Replies on user input and responds when
+     * buttons have been pressed.
+     *
+     * @param update current update
+     * @return outMessage with instruction which is to be passed
+     * to onUpdateReceived method
+     */
     private SendMessage replyOnKeyboard(Update update) {
 
         SendMessage outMessage = new SendMessage();
 
-
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
-
 
         // Range of water amount: [1;500] ml
         String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
@@ -85,10 +93,8 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton("Water"));
 
-
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton("Exercise"));
-
 
         KeyboardRow keyboardThirdRow = new KeyboardRow();
         keyboardThirdRow.add(new KeyboardButton("Food"));
@@ -100,7 +106,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         replyKeyboardMarkup.setKeyboard(keyboard);
 
         outMessage.setReplyMarkup(replyKeyboardMarkup);
-
 
         Menu menu = Menu.valueOf(messageText);
 
@@ -214,5 +219,4 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     public String getBotToken() {
         return "572301838:AAEECuKTjMdipxaryku0FHijPZMohHHjO60";
     }
-
 }

@@ -1,12 +1,9 @@
 package bot;
 
-import java.sql.*;
-
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import javax.sql.StatementEventListener;
 
 /**
  * Initialize and register botAPI
@@ -17,14 +14,11 @@ import javax.sql.StatementEventListener;
 
 public class Controller {
 
-
     public static void main(String[] args) {
 
+        //CAEDatabase obj = new CAEDatabase();
+        // obj.getConnection("FRUITS");
 
-        CAEDatabase obj = new CAEDatabase();
-        obj.getConnection("FRUITS");
-
-        /*
         ApiContextInitializer.init();
         TelegramBotsApi botAPI = new TelegramBotsApi();
         // for bot registration
@@ -35,8 +29,5 @@ public class Controller {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-
-        */
     }
-
 }
