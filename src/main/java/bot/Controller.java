@@ -11,7 +11,6 @@ import javax.sql.StatementEventListener;
 /**
  * Initialize and register botAPI
  *
- * @author Mary Pyvovarchuk
  * @version 1.0
  * @since 2018-09-14
  */
@@ -20,6 +19,10 @@ public class Controller {
 
 
     public static void main(String[] args) {
+
+
+        CAEDatabase obj = new CAEDatabase();
+        obj.getConnection("FRUITS");
 
         /*
         ApiContextInitializer.init();

@@ -9,9 +9,6 @@ import java.util.Date;
  * properties used in Food, Water and
  * Exercises clases.
  *
- * @author Mary Pyvovarchuk
- * @version 1.0
- * @since 2018-09-14
  */
 
 public  class Options {

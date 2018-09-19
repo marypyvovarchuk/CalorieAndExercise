@@ -13,18 +13,17 @@ public class Food extends Options {
     public Date lastDate = new Date();
 
 
-    public void getReply(int calorieCurrBalance,
-                        int proteinCurrBalance,
-                        int carbCurrBalance,
-                        int fatCurrBalance) {
+    public void getReply(double calorieCurrBalance,
+                         double proteinCurrBalance,
+                         double carbCurrBalance,
+                         double fatCurrBalance) {
 
-        Food obj = new Food();
 
         String lastWaterDate = formatDay(lastDate);
         if (controlDay(lastWaterDate)) {
-            obj.calorieBalance += calorieCurrBalance;
-            obj.proteinBalance += proteinCurrBalance;
-            obj.fatBalance += fatCurrBalance;
+            calorieBalance += calorieCurrBalance;
+            proteinBalance += proteinCurrBalance;
+            fatBalance += fatCurrBalance;
             carbBalance += carbCurrBalance;
 
         } else {

@@ -7,9 +7,6 @@ import java.util.Date;
  * options used to count water balance
  * each new day.
  *
- * @author Mary Pyvovarchuk
- * @version 1.0
- * @since 2018-09-14
  */
 
 public class Water extends Options {
