@@ -1,7 +1,6 @@
 package bot;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -11,8 +10,6 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Math.toIntExact;
 
 /**
  * CalorieAndExercise is a Telegram bot
@@ -26,7 +23,7 @@ import static java.lang.Math.toIntExact;
 
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
-    public Water water = new Water();
+    private Water water = new Water();
     final String GREETINGS = "";
     public Exercise exercise = new Exercise();
 
@@ -34,99 +31,30 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
 
-
             String message = update.getMessage().getText();
             if (message.equals("/start")) {
-
                 helloBot(update);
-
             } else {
-
                 SendMessage outMessage = replyOnKeyboard(update);
                 try {
                     execute(outMessage);
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-
-            }
-
-
-        } else if (update.hasCallbackQuery()) {
-
-            String call_data = update.getCallbackQuery().getData();
-            long message_id = update.getCallbackQuery().getMessage().getMessageId();
-            long chat_id = update.getCallbackQuery().getMessage().getChatId();
-
-
-            int amount = countWater(call_data);
-
-            String answer = "Your water balance:\n" + amount;
-            EditMessageText new_message = new EditMessageText()
-                    .setChatId(chat_id)
-                    .setMessageId(toIntExact(message_id))
-                    .setText(answer);
-
-
-            try {
-                execute(new_message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-
             }
         }
-
     }
 
 
-    public void helloBot(Update update) {
+    private void helloBot(Update update) {
         SendMessage outMessage = new SendMessage();
 
         outMessage.setChatId(update.getMessage().getChatId());
         outMessage.setText(GREETINGS);
-
     }
 
 
-    public int countWater(String call_data) {
-        int amount = 0;
-
-        if (call_data.equals("100")) {
-            water.getReply(100);
-            amount = water.waterBalance;
-            return amount;
-        } else {
-            if (call_data.equals("200")) {
-                water.getReply(200);
-                amount = water.waterBalance;
-                return amount;
-
-            } else {
-                if (call_data.equals("250")) {
-                    water.getReply(250);
-                    amount = water.waterBalance;
-                    return amount;
-                } else {
-                    if (call_data.equals("500")) {
-                        water.getReply(500);
-                        amount = water.waterBalance;
-                        return amount;
-                    } else {
-                        return 0;
-                    }
-                }
-
-
-            }
-
-
-        }
-
-
-    }
-
-
-    public SendMessage replyOnKeyboard(Update update) {
+    private SendMessage replyOnKeyboard(Update update) {
 
         SendMessage outMessage = new SendMessage();
 
@@ -181,9 +109,11 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
                 outMessage.setText("Enter amount: \nExample: 100 ml");
                 break;
             case Exercise:
+                // note: choose an exercise
                 outMessage.setText("Enter interval: \nExample: 10 min");
                 break;
             case Food:
+                // note: choose a meal
                 outMessage.setText("Enter weight: \nExample: 100 g");
                 break;
             default:
@@ -226,12 +156,10 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     public String replaceMin(String reg) {
 
         if (reg.contains("ml")) {
-
             String result = reg.replace(" min", "");
             return result;
         } else
             return reg;
-
     }
 
 
@@ -253,7 +181,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             return result;
         } else
             return reg;
-
     }
 
 
@@ -276,7 +203,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             return result;
         } else
             return reg;
-
     }
 
 

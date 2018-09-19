@@ -12,7 +12,6 @@ import java.util.Date;
  * @since 2018-09-14
  */
 
-
 public class Water extends Options {
 
     public int waterBalance = 0;

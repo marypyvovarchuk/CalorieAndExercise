@@ -14,7 +14,6 @@ import java.util.Date;
  * @since 2018-09-14
  */
 
-
 public  class Options {
 
     public  boolean controlDay(String last) {
