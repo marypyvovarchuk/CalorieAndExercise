@@ -1,5 +1,5 @@
 package bot;
 
-public enum Menu {Water, Exercise, Food}
+public enum Menu { FRUITS, VEGETABLES, DRINKS, MEAT, FISH, JUICES, NUTS, CEREALS}
 
 

@@ -1,3 +1,3 @@
 package bot;
 
-public enum Tables {FRUITS, VEGETABLES, DRINKS, MEAT,FISH, JUICES, NUTS, CEREALS, EXERCISES}
+public enum Tables {Fruits, Vegetables, Drinks, Meat, Fish, Juices, Nuts, Cereals, Exercises}

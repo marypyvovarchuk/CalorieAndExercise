@@ -52,8 +52,8 @@ public class Food extends Options {
      * @param tableName - Name of Table from Database
      * @param mealName  - Chosen meal
      */
-    public void addCurrMeal(String mealName, String tableName) {
-
+    public void addCurrMeal(String mealName, String tableName, int amount) {
+    String correstMealName = mealName.replace ("/", "");
         String sqlQuery = "SELECT * FROM " + tableName;
         Connection connection;
         try {
@@ -93,6 +93,16 @@ public class Food extends Options {
     }
 
 
+    public String showFoodBalance() {
+        String balance = "Calories: " + calorieBalance + "\n" +
+                "Protein: " + proteinBalance + "\n" +
+                "Carbs: " + carbBalance + "\n" +
+                "Fats: " + fatBalance;
+
+        return balance;
+    }
+
+
     /**
      * Method is used to create List with all the name of
      * meals from specified table
@@ -101,7 +111,7 @@ public class Food extends Options {
      * @return names -  List with meal names from specified
      * table.
      */
-    public static List<String> listWithNames(String tableName) {
+    public List<String> listWithNames(String tableName) {
 
         Connection connection;
         List<String> names = new ArrayList<>();
@@ -123,7 +133,7 @@ public class Food extends Options {
                     ResultSet rs = st.executeQuery(sqlQuery);
                     while (rs.next()) {
                         String s = rs.getString("NAME");
-                        names.add(s);
+                        names.add("/" + s  /* + "\n"*/);
                     }
                 }
             }
