@@ -50,6 +50,7 @@ public class Food extends Options {
      * Method is used to adjust calories and PCF balance
      *
      * @param mealName - Chosen meal
+     * @param amount - Weight of chosen meal
      */
     public void addCurrMeal(String mealName, int amount) {
        // String correstMealName = mealName.replace("/", "");

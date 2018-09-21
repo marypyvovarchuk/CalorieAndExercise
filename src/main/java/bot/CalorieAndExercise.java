@@ -26,9 +26,12 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     private Water water = new Water();
     final String GREETINGS = "";
     public Exercise currExerciseBalance = new Exercise();
+    public String storedNameOfExercise;
     public Food currMealBalance = new Food();
+    public String storedNameOfMeal = "NO MEAL";
+    public String storedNameOfTable = "NO TABLE";
+    public int weight;
     public String oldMessage;
-    public String nameOfTable;
 
     public void onUpdateReceived(Update update) {
 
@@ -52,9 +55,15 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     private void helloBot(Update update) {
 
         SendMessage outMessage = new SendMessage();
-
+        String greetings = "Hello and welcome!\nPlease enter your weight to" +
+                "make calculations more correct.\nBut honestly :) ";
         outMessage.setChatId(update.getMessage().getChatId());
-        outMessage.setText(GREETINGS);
+        outMessage.setText(greetings);
+        try {
+            execute(outMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -73,8 +82,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
 
-     //   oldMessage = messageText;
-//
         // Range of water amount: [1;500] ml
         String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
 
@@ -83,6 +90,9 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         // Range of meal weight: [1;1000] g
         String regexFood = "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1000)";
+
+
+        String regexWeight = "([2-8][0-9]|9[0-9]|1[0-9]{2}|200)";
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
@@ -111,26 +121,21 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
-
-        //Menu menu = Menu.valueOf(messageText);
-
-
-        // Menu menu = Menu.valueOf(messageText);
-
-
         if (messageText.equals("FOOD")) {
-            nameOfTable = "FOOD";
+            storedNameOfTable = "FOOD";
             outMessage.setText("Enter name of meal:");
             return outMessage;
         } else if (messageText.equals("WATER")) {
             outMessage.setText("Enter amount: \nExample: 100 ml");
         } else if (messageText.equals("EXERCISE")) {
-            nameOfTable = "EXERCISE";
-            outMessage.setText("Enter name of meal:");
+            //outMessage.setText("weight" + weight);
+            // return outMessage;
+            storedNameOfTable = "EXERCISE";
+            outMessage.setText("Enter name of exercise:");
             return outMessage;
         }
-        if (replaceMl(messageText).matches(regexWater)) {
-
+        if (messageText.contains("ml")) {
+            // check if matches regex
             water.getReply(Integer.parseInt(replaceMl(messageText)));
             int amount = water.waterBalance;
 
@@ -138,42 +143,36 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             outMessage.setText(answer);
 
         } else {
-            if (replaceMin(messageText).matches(regexExe)) {
+            if (messageText.contains("min")) {
                 outMessage.setText("Enter weight: \nExample: 100 g");
 
             } else {
-                if (replaceG(messageText).matches(regexFood)) {
+                if (messageText.contains(" g")) {
                     int amount = Integer.parseInt(replaceG(messageText));
-                    currMealBalance.addCurrMeal(oldMessage, amount);
+                    currMealBalance.addCurrMeal(storedNameOfMeal, amount);
 
                     outMessage.setText(currMealBalance.showFoodBalance());
-                   // outMessage.setText(oldMessage);
                 } else {
-                    if (nameOfTable.equals("FOOD")) {
-                        outMessage.setText("Enter weight: \nExample: 100 g");
-                       oldMessage = messageText;
+                    if (storedNameOfTable.equals("FOOD")) {
+                        outMessage.setText("Enter weight. \nExample: 100 g");
+                        storedNameOfMeal = messageText;
                     }
-                    if (nameOfTable.equals("EXERCISE")) {
-                        outMessage.setText("Enter weight: \nExample: 100 g");
-                    }
+                    if (storedNameOfTable.equals("EXERCISE")) {
+                        outMessage.setText("Enter interval. \nExample: 10 min");
+                        storedNameOfExercise = messageText;
+                    } else if (messageText.contains("kg")) {
+                        weight = Integer.parseInt(replaceKG(messageText));
+                        outMessage.setText("Thank you!\nNow choose one option you want to add.");
+                        return outMessage;
+                    } else
+                        outMessage.setText("Please input correctly!");
+
 
                 }
             }
         }
 
         return outMessage;
-    }
-
-
-    public boolean ifOldMessageEqualsNameOfTable() {
-
-        for (Tables tab : Tables.values()) {
-            if (oldMessage.equals(tab.toString())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 
@@ -245,6 +244,17 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         if (reg.contains("g")) {
 
             String result = reg.replace(" g", "");
+            return result;
+        } else
+            return reg;
+    }
+
+
+    public String replaceKG(String reg) {
+
+        if (reg.contains("kg")) {
+
+            String result = reg.replace(" kg", "");
             return result;
         } else
             return reg;
