@@ -20,15 +20,15 @@ public class Food extends Options {
                          double carbCurrBalance,
                          double fatCurrBalance) {
 
-
         String lastWaterDate = formatDay(lastDate);
         if (controlDay(lastWaterDate)) {
+
             calorieBalance += calorieCurrBalance;
             proteinBalance += proteinCurrBalance;
             fatBalance += fatCurrBalance;
             carbBalance += carbCurrBalance;
-
         } else {
+
             calorieBalance = 0;
             proteinBalance = 0;
             fatBalance = 0;
@@ -38,7 +38,6 @@ public class Food extends Options {
             proteinBalance += proteinCurrBalance;
             fatBalance += fatCurrBalance;
             carbBalance += carbCurrBalance;
-
 
             Date rightNowDate = new Date();
             lastDate = rightNowDate;
