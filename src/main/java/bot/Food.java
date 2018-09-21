@@ -49,12 +49,11 @@ public class Food extends Options {
     /**
      * Method is used to adjust calories and PCF balance
      *
-     * @param tableName - Name of Table from Database
-     * @param mealName  - Chosen meal
+     * @param mealName - Chosen meal
      */
-    public void addCurrMeal(String mealName, String tableName, int amount) {
-    String correstMealName = mealName.replace ("/", "");
-        String sqlQuery = "SELECT * FROM " + tableName;
+    public void addCurrMeal(String mealName, int amount) {
+       // String correstMealName = mealName.replace("/", "");
+        String sqlQuery = "SELECT * FROM FRUITS";
         Connection connection;
         try {
 
@@ -74,9 +73,16 @@ public class Food extends Options {
                     double proteins = rs.getFloat("PROTEINS");
                     double fats = rs.getFloat("FATS");
                     double carbs = rs.getFloat("CARBS");
-                    System.out.println(s + "   " + calories);
 
-                    getReply(calories, proteins, carbs, fats); // чи правильний порядок параметрів
+                    calories /= 100;
+                    proteins /= 100;
+                    fats /= 100;
+                    carbs /= 100;
+
+                    getReply(calories * amount,
+                            proteins * amount,
+                            carbs * amount,
+                            fats * amount);
 
                 }
             }

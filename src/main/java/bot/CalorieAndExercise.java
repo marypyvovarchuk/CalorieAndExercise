@@ -28,7 +28,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     public Exercise currExerciseBalance = new Exercise();
     public Food currMealBalance = new Food();
     public String oldMessage;
-    public String storedMeal;
+    public String nameOfTable;
 
     public void onUpdateReceived(Update update) {
 
@@ -73,6 +73,8 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
 
+     //   oldMessage = messageText;
+//
         // Range of water amount: [1;500] ml
         String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
 
@@ -93,13 +95,13 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("Water"));
+        keyboardFirstRow.add(new KeyboardButton("WATER"));
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("Exercise"));
+        keyboardSecondRow.add(new KeyboardButton("EXERCISE"));
 
         KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardThirdRow.add(new KeyboardButton("Food"));
+        keyboardThirdRow.add(new KeyboardButton("FOOD"));
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
@@ -111,114 +113,52 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
         //Menu menu = Menu.valueOf(messageText);
-        String[] menu = {"FRUITS", "VEGETABLES", "DRINKS", "MEAT", "FISH", "JUICES", "NUTS", "CEREALS"};
 
 
-        for (String menuItems : menu) {
-            if (messageText.contains(menuItems)) {
+        // Menu menu = Menu.valueOf(messageText);
 
-                List<String> list = currMealBalance.listWithNames(menuItems);
-                oldMessage = menuItems;
-                outMessage.setText(replacemetn(list));
-            }
 
-            //else outMessage.setText("oopss");
-
+        if (messageText.equals("FOOD")) {
+            nameOfTable = "FOOD";
+            outMessage.setText("Enter name of meal:");
+            return outMessage;
+        } else if (messageText.equals("WATER")) {
+            outMessage.setText("Enter amount: \nExample: 100 ml");
+        } else if (messageText.equals("EXERCISE")) {
+            nameOfTable = "EXERCISE";
+            outMessage.setText("Enter name of meal:");
+            return outMessage;
         }
-/*
-            switch (menu) {
-                case WATER:
-                    oldMessage = menu.toString();
-                    outMessage.setText("Enter amount: \nExample: 100 ml");
-                    break;
-                case EXERCISE:
-                    oldMessage = menu.toString();
-                    // note: choose an exercise
-                    //outMessage.setText("Hello");
-                    outMessage.setText("Enter interval: \nExample: 10 min");
-                    break;
-                case FOOD:
-                    oldMessage = menu.toString();
-                    // note: choose a meal
-                    outMessage.setText("Enter weight: \nExample: 100 g");
-                    break;
-                // default:
-                //  outMessage.setText("Please, text correctly!");
-                case FRUITS:
-                    List<String> list = currMealBalance.listWithNames("Fruits");
-                    oldMessage = menu.toString();
-                    outMessage.setText(replacemetn(list));
+        if (replaceMl(messageText).matches(regexWater)) {
 
-                    //outMessage.setText("Enter amount: \nExample: 100 ml");
-                    break;
-                case VEGETABLES:
-                    // note: choose an exercise
-                    oldMessage = menu.toString();
-                    outMessage.setText("Enter interval: \nExample: 10 min");
-                    break;
-                case NUTS:
-                    oldMessage = menu.toString();
-                    // note: choose a meal
-                    outMessage.setText("Enter weight: \nExample: 100 g");
-                    break;
-                case MEAT:
-                    oldMessage = menu.toString();
-                    // note: choose a meal
-                    outMessage.setText("Enter weight: \nExample: 100 g");
-                    break;
-                case FISH:
-                    oldMessage = menu.toString();
-                    // note: choose a meal
-                    outMessage.setText("Enter weight: \nExample: 100 g");
-                    break;
-                case DRINKS:
-                    oldMessage = menu.toString();
-                    // note: choose a meal
-                    outMessage.setText("Enter weight: \nExample: 100 g");
-                    break;
-                case CEREALS:
-                    oldMessage = menu.toString();
-                    // note: choose a meal
-                    outMessage.setText("Enter weight: \nExample: 100 g");
-                    break;
-                default:
-                    //  outMessage.setText("Please, text correctly!");
-                    break;
+            water.getReply(Integer.parseInt(replaceMl(messageText)));
+            int amount = water.waterBalance;
 
-            }
-*/
+            String answer = "Your water balance:\n" + amount;
+            outMessage.setText(answer);
 
-
-        if (ifOldMessageEqualsNameOfTable()) {
-            storedMeal = messageText;
-
-            outMessage.setText("Enter weight: \nExample: 100 g");
         } else {
-
-            if (replaceMl(messageText).matches(regexWater)) {
-                oldMessage = messageText;
-                water.getReply(Integer.parseInt(replaceMl(messageText)));
-                int amount = water.waterBalance;
-
-                String answer = "Your water balance:\n" + amount;
-                outMessage.setText(answer);
+            if (replaceMin(messageText).matches(regexExe)) {
+                outMessage.setText("Enter weight: \nExample: 100 g");
 
             } else {
-                if (replaceMin(messageText).matches(regexExe)) {
-                    // to do in case user enter interval of exercises
-                    outMessage.setText("Enter weight: \nExample: 100 g");
-                    oldMessage = messageText;
-                } else {
-                    if (replaceG(messageText).matches(regexFood)) {
-                        int amount = Integer.parseInt(replaceG(messageText));
-                        currMealBalance.addCurrMeal(storedMeal, oldMessage, amount);
-                        oldMessage = messageText;
+                if (replaceG(messageText).matches(regexFood)) {
+                    int amount = Integer.parseInt(replaceG(messageText));
+                    currMealBalance.addCurrMeal(oldMessage, amount);
 
-                        currMealBalance.showFoodBalance();
+                    outMessage.setText(currMealBalance.showFoodBalance());
+                   // outMessage.setText(oldMessage);
+                } else {
+                    if (nameOfTable.equals("FOOD")) {
+                        outMessage.setText("Enter weight: \nExample: 100 g");
+                       oldMessage = messageText;
                     }
+                    if (nameOfTable.equals("EXERCISE")) {
+                        outMessage.setText("Enter weight: \nExample: 100 g");
+                    }
+
                 }
             }
-
         }
 
         return outMessage;
