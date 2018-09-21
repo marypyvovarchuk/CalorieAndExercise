@@ -24,14 +24,12 @@ import java.util.List;
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
     private Water water = new Water();
-    final String GREETINGS = "";
     public Exercise currExerciseBalance = new Exercise();
     public String storedNameOfExercise;
     public Food currMealBalance = new Food();
     public String storedNameOfMeal = "NO MEAL";
     public String storedNameOfTable = "NO TABLE";
     public int weight;
-    public String oldMessage;
 
     public void onUpdateReceived(Update update) {
 
@@ -91,7 +89,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         // Range of meal weight: [1;1000] g
         String regexFood = "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1000)";
 
-
         String regexWeight = "([2-8][0-9]|9[0-9]|1[0-9]{2}|200)";
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -128,8 +125,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         } else if (messageText.equals("WATER")) {
             outMessage.setText("Enter amount: \nExample: 100 ml");
         } else if (messageText.equals("EXERCISE")) {
-            //outMessage.setText("weight" + weight);
-            // return outMessage;
             storedNameOfTable = "EXERCISE";
             outMessage.setText("Enter name of exercise:");
             return outMessage;
@@ -149,6 +144,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             } else {
                 if (messageText.contains(" g")) {
                     int amount = Integer.parseInt(replaceG(messageText));
+
                     currMealBalance.addCurrMeal(storedNameOfMeal, amount);
 
                     outMessage.setText(currMealBalance.showFoodBalance());
@@ -259,6 +255,41 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         } else
             return reg;
     }
+
+
+    private boolean controlFoodPortion(String messageText) {
+        String regexFood = "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1000)";
+        if (replaceG(messageText).matches(regexFood)) {
+            return true;
+        } else return false;
+    }
+
+
+    private boolean controlExerciseInterval(String messageText) {
+        String regexExe = "([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|120)";
+        if (replaceMin(messageText).matches(regexExe)) {
+            return true;
+        } else return false;
+    }
+
+
+    private boolean controlWaterAmount(String messageText) {
+        // Range of water amount: [1;500] ml
+        String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
+        if (replaceMl(messageText).matches(regexWater)) {
+            return true;
+        } else return false;
+    }
+
+    /*
+    private boolean controlUserWeight(String messageText) {
+        // Range of water amount: [1;500] ml
+        String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
+        if (replaceMl(messageText).matches(regexWater)) {
+            return true;
+        } else return false;
+    }
+    */
 
 
     public String getBotUsername() {
