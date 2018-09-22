@@ -16,12 +16,9 @@ public class Controller {
 
     public static void main(String[] args) {
 
-        //CAEDatabase obj = new CAEDatabase();
-        // obj.getConnection("FRUITS");
-
         ApiContextInitializer.init();
         TelegramBotsApi botAPI = new TelegramBotsApi();
-        // for bot registration
+
         CalorieAndExercise botCAE1 = new CalorieAndExercise();
 
         try {

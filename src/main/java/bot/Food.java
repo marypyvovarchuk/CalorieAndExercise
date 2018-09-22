@@ -1,9 +1,7 @@
 package bot;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static java.lang.StrictMath.round;
 
@@ -108,55 +106,5 @@ public class Food extends Options {
                 "Fats: " + round(fatBalance);
 
         return balance;
-    }
-
-
-    /**
-     * Method is used to create List with all the name of
-     * meals from specified table
-     *
-     * @param tableName - Name of Table from Database
-     * @return names -  List with meal names from specified
-     * table.
-     */
-    public List<String> listWithNames(String tableName) {
-
-        Connection connection;
-        List<String> names = new ArrayList<>();
-
-        try {
-
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(
-                    "URLDatabase",
-                    "root",
-                    "230373hri");
-
-            String sqlQuery = "SELECT * FROM " + tableName;
-
-            for (Tables name : Tables.values()) {
-                if (name.toString().equals(tableName)) {
-
-                    Statement st = connection.createStatement();
-                    ResultSet rs = st.executeQuery(sqlQuery);
-                    while (rs.next()) {
-                        String s = rs.getString("NAME");
-                        names.add("/" + s  /* + "\n"*/);
-                    }
-                }
-            }
-
-            connection.close();
-        } catch (SQLException c) {
-            c.printStackTrace();
-        } catch (ClassNotFoundException b) {
-            b.printStackTrace();
-        } catch (IllegalAccessException b) {
-            b.printStackTrace();
-        } catch (InstantiationException b) {
-            b.printStackTrace();
-        }
-
-        return names;
     }
 }

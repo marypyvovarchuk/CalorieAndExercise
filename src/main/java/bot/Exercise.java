@@ -1,9 +1,7 @@
 package bot;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static java.lang.StrictMath.round;
 
@@ -30,50 +28,6 @@ public class Exercise extends Options {
 
 
     /**
-     * Method is used to create List with all the name of
-     * Exercises from EXERCISES table
-     *
-     * @return names - List with exercises` names
-     */
-    public static List<String> listWithNames() {
-
-        Connection connection;
-        List<String> names = new ArrayList<>();
-
-        try {
-
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/caedb?autoReconnect=true&useSSL=false",
-                    "root",
-                    "230373hri");
-
-            String sqlQuery = "SELECT * FROM EXERCISES";
-
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(sqlQuery);
-
-            while (rs.next()) {
-                String s = rs.getString("NAME");
-                names.add(s);
-            }
-
-            connection.close();
-        } catch (SQLException c) {
-            c.printStackTrace();
-        } catch (ClassNotFoundException b) {
-            b.printStackTrace();
-        } catch (IllegalAccessException b) {
-            b.printStackTrace();
-        } catch (InstantiationException b) {
-            b.printStackTrace();
-        }
-
-        return names;
-    }
-
-
-    /**
      * Method is used to calculated spent energy
      * wasted on specified exercise.
      *
@@ -88,9 +42,9 @@ public class Exercise extends Options {
 
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/caedb?autoReconnect=true&useSSL=false",
-                    "root",
-                    "230373hri");
+                    Properties.URLDatabase,
+                    Properties.USER,
+                    Properties.URLPassword);
 
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sqlQuery);
