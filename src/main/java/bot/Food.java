@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.StrictMath.round;
+
 public class Food extends Options {
 
     public double calorieBalance = 0;
@@ -100,10 +102,10 @@ public class Food extends Options {
 
 
     public String showFoodBalance() {
-        String balance = "Calories: " + calorieBalance + "\n" +
-                "Protein: " + proteinBalance + "\n" +
-                "Carbs: " + carbBalance + "\n" +
-                "Fats: " + fatBalance;
+        String balance = "Calories: " + round(calorieBalance) + "\n" +
+                "Protein: " + round(proteinBalance) + "\n" +
+                "Carbs: " + round(carbBalance) + "\n" +
+                "Fats: " + round(fatBalance);
 
         return balance;
     }
@@ -126,7 +128,7 @@ public class Food extends Options {
 
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/caedb?autoReconnect=true&useSSL=false",
+                    "URLDatabase",
                     "root",
                     "230373hri");
 

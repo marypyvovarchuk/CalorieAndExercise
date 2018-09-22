@@ -9,7 +9,10 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Handler;
 
 /**
  * CalorieAndExercise is a Telegram bot
@@ -34,13 +37,15 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
-
+            SendMessage outMessage;
             String message = update.getMessage().getText();
 
             if (message.equals("/start")) {
-                helloBot(update);
+                outMessage = helloBot(update);
             } else {
-                SendMessage outMessage = replyOnKeyboard(update);
+
+               outMessage = replyOnKeyboard(update);
+            }
                 try {
                     execute(outMessage);
                 } catch (TelegramApiException e) {
@@ -48,39 +53,11 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
                 }
             }
         }
-    }
 
 
-    private void helloBot(Update update) {
-
-        SendMessage outMessage = new SendMessage();
-        String greetings = "Hello and welcome!\nPlease enter your weight to" +
-                "make calculations more correct.\nBut honestly :) ";
-        outMessage.setChatId(update.getMessage().getChatId());
-        outMessage.setText(greetings);
-
-        try {
-            execute(outMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Replies on user input and responds when
-     * buttons have been pressed.
-     *
-     * @param update current update
-     * @return outMessage with instruction which is to be passed
-     * to onUpdateReceived method
-     */
-    private SendMessage replyOnKeyboard(Update update) {
+    private SendMessage helloBot(Update update) {
 
         SendMessage outMessage = new SendMessage();
-
-        String messageText = update.getMessage().getText();
-        outMessage.setChatId(update.getMessage().getChatId());
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
@@ -109,6 +86,182 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         outMessage.setReplyMarkup(replyKeyboardMarkup);
 
+        String greetings = "Hello and welcome!\nPlease enter your weight to" +
+                "make calculations more correct.\nBut honestly :) ";
+        outMessage.setChatId(update.getMessage().getChatId());
+        outMessage.setText(greetings);
+return outMessage;
+
+    }
+
+
+    public String foodChoosed() {
+        storedNameOfTable = "FOOD";
+        return "Enter name of meal:";
+    }
+
+
+    public String exerciseChoosed() {
+        storedNameOfTable = "EXERCISE";
+        return "Enter name of exercise:";
+    }
+
+
+    public String waterChoosed() {
+        storedNameOfTable = "WATER";
+
+        return "Enter amount: \nExample: 100 ml";
+    }
+
+
+    public boolean func (String messageText) {
+
+        if(messageText.matches(".*\\d+.*")) {
+            if (messageText.contains("g") || messageText.contains("ml") || messageText.contains("min")) {
+                return false;
+            } else return true;
+        } else
+            return false;
+
+
+    }
+
+
+        public String mlEntered (String messageText){
+
+        messageText = replaceMl(messageText);
+            // check if matches regex
+            if (!func(messageText)) {
+                return "no";
+            } else {
+                water.getReply(Integer.parseInt(messageText));
+                int amount = water.waterBalance;
+
+                String answer = "Your water balance:\n" + amount;
+                return answer;
+            }
+
+        }
+
+
+        public String minEntered (String messageText){
+            messageText = replaceMin(messageText);
+            // check if matches rege
+            if (!func(messageText)) {
+                return "no";
+            } else {
+                int interval = Integer.parseInt(messageText);
+                currMealBalance.addCurrMeal(storedNameOfExercise, interval);
+
+                return currExerciseBalance.showWastedEnergy();
+            }
+
+        }
+
+        public String gEntered (String messageText){
+
+            // check if matches regex
+            messageText = replaceG(messageText);
+            if (!func(messageText)) {
+                return "no";
+            } else {
+
+                int amount = Integer.parseInt(messageText);
+                currMealBalance.addCurrMeal(storedNameOfMeal, amount);
+
+                return currMealBalance.showFoodBalance();
+            }
+            }
+
+
+
+        public String kgEntered (String messageText){
+
+            // check if matches regex
+            messageText = replaceKg(messageText);
+            if (!func(messageText)) {
+                return "no";
+            } else {
+                weight = Integer.parseInt(messageText);
+                currExerciseBalance.userWeight = weight;
+
+                return "Thank you!\nNow choose one option you want to add.";
+
+            }
+        }
+
+
+        /**
+         * Replies on user input and responds when
+         * buttons have been pressed.
+         *
+         * @param update current update
+         * @return outMessage with instruction which is to be passed
+         * to onUpdateReceived method
+         */
+        public SendMessage replyOnKeyboard (Update update){
+
+            SendMessage outMessage = new SendMessage();
+
+            String messageText = update.getMessage().getText();
+            outMessage.setChatId(update.getMessage().getChatId());
+
+
+            HashMap<Boolean, String> hash = new HashMap<>();
+
+            //hash.put(messageText.equals("/start"), foodChoosed());
+           // hash.put(messageText.equals("FOOD"), foodChoosed());
+           // hash.put(messageText.equals("EXERCISE"), exerciseChoosed());
+          //  hash.put(messageText.equals("WATER"), waterChoosed());
+           //  hash.put(messageText.contains("ml"), mlEntered(messageText));
+           // hash.put(messageText.contains(" g"), gEntered(messageText));
+           // hash.put(messageText.contains("kg"), kgEntered(messageText));
+           // hash.put(messageText.contains("min"), minEntered(messageText));
+
+
+            // if (hash.containsKey(true))
+         /*   for (HashMap.Entry<Boolean, String> pair : hash.entrySet()) {
+
+                if (pair.getKey()) {
+                    outMessage.setText(pair.getValue());
+                    return outMessage;
+                }
+
+            }
+
+*/
+
+
+        /*
+  ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+
+        outMessage.setReplyMarkup(replyKeyboardMarkup);
+
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton("WATER"));
+
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton("EXERCISE"));
+
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton("FOOD"));
+
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+        keyboard.add(keyboardThirdRow);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        outMessage.setReplyMarkup(replyKeyboardMarkup); */
+
+
+
         if (messageText.equals("FOOD")) {
 
             storedNameOfTable = "FOOD";
@@ -118,11 +271,12 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
             outMessage.setText("Enter amount: \nExample: 100 ml");
         } else if (messageText.equals("EXERCISE")) {
-
             storedNameOfTable = "EXERCISE";
             outMessage.setText("Enter name of exercise:");
             return outMessage;
         }
+
+
         if (messageText.contains("ml")) {
 
             // check if matches regex
@@ -131,7 +285,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
             String answer = "Your water balance:\n" + amount;
             outMessage.setText(answer);
-        } else {
+        } else
             if (messageText.contains("min")) {
 
                 // check if matches regex
@@ -140,21 +294,19 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
                 outMessage.setText(currExerciseBalance.showWastedEnergy());
 
-            } else {
-                if (messageText.contains(" g")) {
+            } else if (messageText.contains(" g")) {
 
                     // check if matches regex
                     int amount = Integer.parseInt(replaceG(messageText));
                     currMealBalance.addCurrMeal(storedNameOfMeal, amount);
 
                     outMessage.setText(currMealBalance.showFoodBalance());
-                } else {
-                    if (storedNameOfTable.equals("FOOD")) {
+                } else  if (storedNameOfTable.equals("FOOD")) {
 
                         outMessage.setText("Enter weight. \nExample: 100 g");
                         storedNameOfMeal = messageText;
                     }
-                    if (storedNameOfTable.equals("EXERCISE")) {
+                    else if (storedNameOfTable.equals("EXERCISE")) {
 
                         outMessage.setText("Enter interval. \nExample: 10 min");
                         storedNameOfExercise = messageText;
@@ -168,116 +320,118 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
                         return outMessage;
                     } else
                         outMessage.setText("Please input correctly!");
-                }
-            }
-        }
+
+
+
         return outMessage;
-    }
 
-
-    /**
-     * In case user added input as "~10~ min" to specify time
-     * spent working out, this method indicates correct Int value with time.
-     * Return String param used to calculate wasted energy.
-     * On other hand in case input would not be like "~10~ min"
-     * method will return the same String param.
-     *
-     * @param reg user input
-     * @return result String line with replaced substring containing "  min"
-     */
-    private String replaceMin(String reg) {
-
-        if (reg.contains("ml")) {
-            reg = reg.replace(" min", "");
         }
-        return reg;
-    }
 
 
-    /**
-     * Method is used in case user added input as "~200~ ml" which indicates
-     * current water income.
-     * Return String param used to calculate water balance.
-     * On other hand in case input would not be like "~200~ ml"
-     * method will return the same String param.
-     *
-     * @param reg user input
-     * @return result String line with replaced substring containing "  ml"
-     */
-    private String replaceMl(String reg) {
+        /**
+         * In case user added input as "~10~ min" to specify time
+         * spent working out, this method indicates correct Int value with time.
+         * Return String param used to calculate wasted energy.
+         * On other hand in case input would not be like "~10~ min"
+         * method will return the same String param.
+         *
+         * @param reg user input
+         * @return result String line with replaced substring containing "  min"
+         */
+        private String replaceMin (String reg){
 
-        if (reg.contains("ml")) {
-            reg = reg.replace(" ml", "");
+            if (reg.contains("ml")) {
+                reg = reg.replace(" min", "");
+            }
+            return reg;
         }
-        return reg;
-    }
 
 
-    /**
-     * Method is used whereas user added input as "~100~ g" to specify amount
-     * of meal.
-     * Return String param which os used used to calculate calories,
-     * carbs, fats and protein.
-     * On other hand in case input would not be like "~100~ g"
-     * method will return the same String param.
-     *
-     * @param reg user input
-     * @return result String line with replaced substring containing "  g"
-     */
-    private String replaceG(String reg) {
+        /**
+         * Method is used in case user added input as "~200~ ml" which indicates
+         * current water income.
+         * Return String param used to calculate water balance.
+         * On other hand in case input would not be like "~200~ ml"
+         * method will return the same String param.
+         *
+         * @param reg user input
+         * @return result String line with replaced substring containing "  ml"
+         */
+        private String replaceMl (String reg){
 
-        if (reg.contains("g")) {
-            reg = reg.replace(" g", "");
+            if (reg.contains("ml")) {
+                reg = reg.replace(" ml", "");
+            }
+            return reg;
         }
-        return reg;
-    }
 
 
-    private String replaceKg(String reg) {
+        /**
+         * Method is used whereas user added input as "~100~ g" to specify amount
+         * of meal.
+         * Return String param which os used used to calculate calories,
+         * carbs, fats and protein.
+         * On other hand in case input would not be like "~100~ g"
+         * method will return the same String param.
+         *
+         * @param reg user input
+         * @return result String line with replaced substring containing "  g"
+         */
+        private String replaceG (String reg){
 
-        if (reg.contains("kg")) {
-            reg = reg.replace(" kg", "");
+            if (reg.contains("g")) {
+                reg = reg.replace(" g", "");
+            }
+            return reg;
         }
-        return reg;
+
+
+        private String replaceKg (String reg){
+
+            if (reg.contains("kg")) {
+                reg = reg.replace(" kg", "");
+            }
+            return reg;
+        }
+
+
+        private boolean controlFoodPortion (String messageText){
+
+            String regexFood = "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1000)";
+            return replaceG(messageText).matches(regexFood);
+        }
+
+
+        private boolean controlExerciseInterval (String messageText){
+
+            String regexExe = "([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|120)";
+            return replaceMin(messageText).matches(regexExe);
+        }
+
+
+        private boolean controlWaterAmount (String messageText){
+
+            // Range of water amount: [1;500] ml ->  javadoc
+            String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
+            return replaceMl(messageText).matches(regexWater);
+        }
+
+
+        private boolean controlUserWeight (String messageText){
+
+            // Range of water amount: [1;500] ml ->  javadoc
+            String regexWeight = "([2-8][0-9]|9[0-9]|1[0-9]{2}|200)";
+            return replaceKg(messageText).matches(regexWeight);
+        }
+
+
+        public String getBotUsername () {
+            return Properties.USER;
+        }
+
+
+        public String getBotToken () {
+            return Properties.TOKEN;
+        }
+
     }
-
-
-    private boolean controlFoodPortion(String messageText) {
-
-        String regexFood = "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1000)";
-        return replaceG(messageText).matches(regexFood);
-    }
-
-
-    private boolean controlExerciseInterval(String messageText) {
-
-        String regexExe = "([1-9]|[1-8][0-9]|9[0-9]|1[01][0-9]|120)";
-        return replaceMin(messageText).matches(regexExe);
-    }
-
-
-    private boolean controlWaterAmount(String messageText) {
-
-        // Range of water amount: [1;500] ml ->  javadoc
-        String regexWater = "[1-9]|[1-8][0-9]|9[0-9]|[1-4][0-9]{2}|500";
-        return replaceMl(messageText).matches(regexWater);
-    }
-
-
-    private boolean controlUserWeight(String messageText) {
-
-        // Range of water amount: [1;500] ml ->  javadoc
-        String regexWeight = "([2-8][0-9]|9[0-9]|1[0-9]{2}|200)";
-        return replaceKg(messageText).matches(regexWeight);
-    }
-
-
-    public String getBotUsername() {
-        return "CalorieAndExerciseBot";
-    }
-
-
-    public String getBotToken() {
-        return "572301838:AAEECuKTjMdipxaryku0FHijPZMohHHjO60";
-    }
-}

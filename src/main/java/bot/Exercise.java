@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.StrictMath.round;
+
 public class Exercise extends Options {
 
     private double wastedCalories = 0;
@@ -132,14 +134,13 @@ public class Exercise extends Options {
 
     public String showWastedEnergy() {
         String balance = "Congrats!\nYou wasted almost: " +
-                +wastedCalories;
+                + round(wastedCalories);
         return balance;
     }
 
 
     public void addCurrMealV2(String exerciseName, int interval) {
 
-        // String correstMealName = mealName.replace("/", "");
         String sqlQuery = "SELECT * FROM EXERCISE";
         String category = chooseWeightCategory();
 
@@ -149,9 +150,9 @@ public class Exercise extends Options {
 
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/caedb?autoReconnect=true&useSSL=false",
-                    "root",
-                    "230373hri");
+                    Properties.URLDatabase,
+                    Properties.USER,
+                    Properties.URLPassword);
 
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sqlQuery);
