@@ -2,33 +2,41 @@ package bot;
 
 import java.sql.*;
 import java.util.Date;
-
 import static java.lang.StrictMath.round;
+
+
+/**
+ * Specifies properties of food object,
+ * counts calories and tracks protein, carbs and
+ * fat balance.
+ *
+ * @author Mary Pyvovarchuk
+ * @version 1.0
+ * @since 2018-09-14
+ */
 
 public class Food extends Options {
 
-    public double calorieBalance = 0;
-    public double proteinBalance = 0;
-    public double fatBalance = 0;
-    public double carbBalance = 0;
+    private double calorieBalance = 0;
+    private double proteinBalance = 0;
+    private double fatBalance = 0;
+    private double carbBalance = 0;
 
+    private Date lastDate = new Date();
 
-    public Date lastDate = new Date();
-
-    public void getReply(double calorieCurrBalance,
+    private void getReply(double calorieCurrBalance,
                          double proteinCurrBalance,
                          double carbCurrBalance,
                          double fatCurrBalance) {
 
         String lastWaterDate = formatDay(lastDate);
-        if (controlDay(lastWaterDate)) {
 
+        if (controlDay(lastWaterDate)) {
             calorieBalance += calorieCurrBalance;
             proteinBalance += proteinCurrBalance;
             fatBalance += fatCurrBalance;
             carbBalance += carbCurrBalance;
         } else {
-
             calorieBalance = 0;
             proteinBalance = 0;
             fatBalance = 0;
@@ -39,8 +47,7 @@ public class Food extends Options {
             fatBalance += fatCurrBalance;
             carbBalance += carbCurrBalance;
 
-            Date rightNowDate = new Date();
-            lastDate = rightNowDate;
+            lastDate = new Date();
         }
     }
 
@@ -49,26 +56,27 @@ public class Food extends Options {
      * Method is used to adjust calories and PCF balance
      *
      * @param mealName - Chosen meal
-     * @param amount - Weight of chosen meal
+     * @param amount   - Weight of chosen meal
      */
     public void addCurrMeal(String mealName, int amount) {
-       // String correstMealName = mealName.replace("/", "");
+
         String sqlQuery = "SELECT * FROM FRUITS";
         Connection connection;
-        try {
 
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/caedb?autoReconnect=true&useSSL=false",
-                    "root",
-                    "230373hri");
+                    Properties.URLDatabase,
+                    Properties.URLUser,
+                    Properties.URLPassword);
+
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(sqlQuery);
+
             while (rs.next()) {
                 String s = rs.getString("NAME");
 
                 if (s.equals(mealName)) {
-
                     double calories = rs.getFloat("CALORIES");
                     double proteins = rs.getFloat("PROTEINS");
                     double fats = rs.getFloat("FATS");
@@ -83,7 +91,6 @@ public class Food extends Options {
                             proteins * amount,
                             carbs * amount,
                             fats * amount);
-
                 }
             }
             connection.close();
@@ -100,11 +107,10 @@ public class Food extends Options {
 
 
     public String showFoodBalance() {
-        String balance = "Calories: " + round(calorieBalance) + "\n" +
+
+        return "Calories: " + round(calorieBalance) + "\n" +
                 "Protein: " + round(proteinBalance) + "\n" +
                 "Carbs: " + round(carbBalance) + "\n" +
                 "Fats: " + round(fatBalance);
-
-        return balance;
     }
 }

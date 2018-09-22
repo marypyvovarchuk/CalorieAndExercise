@@ -7,13 +7,14 @@ import java.util.Date;
 
 /**
  * Options.java class provides
- * properties used in Food, Water and
+ * date options used in Food, Water and
  * Exercises classes.
  */
 
 public class Options {
 
     public boolean controlDay(String last) {
+
         Date date = new Date();
         return formatDay(date).equals(last);
     }
@@ -23,6 +24,7 @@ public class Options {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = dateFormat.format(date);
+
         return formattedDate;
     }
 }

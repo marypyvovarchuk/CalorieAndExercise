@@ -8,6 +8,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 /**
  * Initialize and register botAPI
  *
+ * @author Mary Pyvovarchuk
  * @version 1.0
  * @since 2018-09-14
  */
@@ -18,7 +19,6 @@ public class Controller {
 
         ApiContextInitializer.init();
         TelegramBotsApi botAPI = new TelegramBotsApi();
-
         CalorieAndExercise botCAE1 = new CalorieAndExercise();
 
         try {
