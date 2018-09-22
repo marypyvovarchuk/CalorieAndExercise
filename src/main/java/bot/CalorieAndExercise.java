@@ -175,19 +175,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
-/*
-    public String replacemetn(List<String> list) {
-        String output = list.toString();
-        String output1 = output.replace(",", "\n");
-        String output2 = output1.replace("[", "");
-        String output3 = output2.replace("]", "");
-
-        return output3;
-
-    }
-    */
-
-
     /**
      * In case user added input as "~10~ min" to specify time
      * spent working out, this method indicates correct Int value with time.
