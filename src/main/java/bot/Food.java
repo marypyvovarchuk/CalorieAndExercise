@@ -76,7 +76,7 @@ public class Food extends Options {
             while (rs.next()) {
                 String s = rs.getString("NAME");
 
-                if (s.equals(mealName)) {
+                if (s.contains(mealName)) {
                     double calories = rs.getFloat("CALORIES");
                     double proteins = rs.getFloat("PROTEINS");
                     double fats = rs.getFloat("FATS");

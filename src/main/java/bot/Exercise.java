@@ -69,7 +69,7 @@ public class Exercise extends Options {
      */
     public void addCurrExercise(String exerciseName, int interval) {
 
-        String sqlQuery = "SELECT * FROM EXERCISE";
+        String sqlQuery = "SELECT * FROM EXERCISES";
         String category = chooseWeightCategory();
         Connection connection;
 
@@ -77,7 +77,7 @@ public class Exercise extends Options {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
                     Properties.URLDatabase,
-                    Properties.USER,
+                    Properties.URLUser,
                     Properties.URLPassword);
 
             Statement st = connection.createStatement();
@@ -86,14 +86,14 @@ public class Exercise extends Options {
             while (rs.next()) {
                 String s = rs.getString("NAME");
 
-                if (s.equals(exerciseName)) {
+                if (s.contains(exerciseName)) {
                     double calories = rs.getFloat(category);
                     calories /= 30;
 
                     getReply(calories * interval);
                 }
             }
-            connection.close();
+           connection.close();
         } catch (SQLException c) {
             c.printStackTrace();
         } catch (ClassNotFoundException b) {

@@ -146,7 +146,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         } else if (messageText.contains("min")) {
 
             int interval = Integer.parseInt(replaceMin(messageText));
-            currMealBalance.addCurrMeal(storedNameOfExercise, interval);
+            currExerciseBalance.addCurrExercise(storedNameOfExercise, interval);
             outMessage.setText(currExerciseBalance.showWastedEnergy());
 
             return outMessage;
@@ -190,7 +190,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
      */
     private String replaceMin(String reg) {
 
-        if (reg.contains("ml")) {
+        if (reg.contains("min")) {
             reg = reg.replace(" min", "");
         }
         return reg;
