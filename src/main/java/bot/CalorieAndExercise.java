@@ -9,6 +9,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -104,6 +105,25 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
+    public String foodChoosed() {
+        storedNameOfTable = "FOOD";
+        return "Enter name of meal:";
+    }
+
+
+    public String exerciseChoosed() {
+        storedNameOfTable = "EXERCISE";
+        return "Enter name of exercise:";
+    }
+
+
+    public String waterChoosed() {
+        storedNameOfTable = "WATER";
+
+        return "Enter amount: \nExample: 100 ml";
+    }
+
+
     /**
      * Replies on user input and responds when
      * buttons have been pressed.
@@ -119,7 +139,30 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText();
         outMessage.setChatId(update.getMessage().getChatId());
 
-        if (messageText.equals("FOOD")) {
+
+
+
+        HashMap<Boolean, String> hash = new HashMap<>();
+
+        hash.put(messageText.equals("/start"), foodChoosed());
+         hash.put(messageText.equals("FOOD"), foodChoosed());
+         hash.put(messageText.equals("EXERCISE"), exerciseChoosed());
+         hash.put(messageText.equals("WATER"), waterChoosed());
+         // hash.put(messageText.contains("ml"), mlEntered(messageText));
+        //hash.put(messageText.contains(" g"), gEntered(messageText));
+        // hash.put(messageText.contains("kg"), kgEntered(messageText));
+        // hash.put(messageText.contains("min"), minEntered(messageText));
+
+
+        if (hash.containsKey(true))
+          for (HashMap.Entry<Boolean, String> pair : hash.entrySet()) {
+                if (pair.getKey()) {
+                    outMessage.setText(pair.getValue());
+                    return outMessage;
+                }
+            }
+
+      /*  if (messageText.equals("FOOD")) {
             storedNameOfTable = "FOOD";
             outMessage.setText("Enter name of meal:");
 
@@ -134,7 +177,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             outMessage.setText("Enter name of exercise:");
 
             return outMessage;
-        }
+        }*/
 
         if (messageText.contains("ml")) {
             water.getReply(Integer.parseInt(replaceMl(messageText)));
@@ -166,8 +209,8 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
             return outMessage;
         } else if (messageText.contains("kg")) {
-
             int weight = Integer.parseInt(replaceKg(messageText));
+            storedNameOfTable = "No table chosen right now";
             currExerciseBalance.userWeight = weight;
             outMessage.setText("Thank you!\nNow choose one option you want to add.");
 
