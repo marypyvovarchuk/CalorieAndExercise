@@ -142,27 +142,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
 
 
-        HashMap<Boolean, String> hash = new HashMap<>();
-
-        hash.put(messageText.equals("/start"), foodChoosed());
-         hash.put(messageText.equals("FOOD"), foodChoosed());
-         hash.put(messageText.equals("EXERCISE"), exerciseChoosed());
-         hash.put(messageText.equals("WATER"), waterChoosed());
-         // hash.put(messageText.contains("ml"), mlEntered(messageText));
-        //hash.put(messageText.contains(" g"), gEntered(messageText));
-        // hash.put(messageText.contains("kg"), kgEntered(messageText));
-        // hash.put(messageText.contains("min"), minEntered(messageText));
-
-
-        if (hash.containsKey(true))
-          for (HashMap.Entry<Boolean, String> pair : hash.entrySet()) {
-                if (pair.getKey()) {
-                    outMessage.setText(pair.getValue());
-                    return outMessage;
-                }
-            }
-
-      /*  if (messageText.equals("FOOD")) {
+        if (messageText.equals("FOOD")) {
             storedNameOfTable = "FOOD";
             outMessage.setText("Enter name of meal:");
 
@@ -177,7 +157,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
             outMessage.setText("Enter name of exercise:");
 
             return outMessage;
-        }*/
+        }
 
         if (messageText.contains("ml")) {
             water.getReply(Integer.parseInt(replaceMl(messageText)));
