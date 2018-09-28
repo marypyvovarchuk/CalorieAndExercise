@@ -105,23 +105,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
-    public String foodChoosed() {
-        storedNameOfTable = "FOOD";
-        return "Enter name of meal:";
-    }
 
-
-    public String exerciseChoosed() {
-        storedNameOfTable = "EXERCISE";
-        return "Enter name of exercise:";
-    }
-
-
-    public String waterChoosed() {
-        storedNameOfTable = "WATER";
-
-        return "Enter amount: \nExample: 100 ml";
-    }
 
 
     /**
@@ -140,9 +124,13 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
         outMessage.setChatId(update.getMessage().getChatId());
 
 
+        if (messageText.equals("/settings")) {
+            storedNameOfTable = "SETTINGS";
+            outMessage.setText("Please enter your weight to\" +\n" +
+                    "                \"make calculations more correct.\\nBut honestly :)");
 
-
-        if (messageText.equals("FOOD")) {
+            return outMessage;
+        } else if (messageText.equals("FOOD")) {
             storedNameOfTable = "FOOD";
             outMessage.setText("Enter name of meal:");
 
