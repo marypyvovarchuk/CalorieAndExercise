@@ -2,6 +2,7 @@ package bot;
 
 import java.sql.*;
 import java.util.Date;
+
 import static java.lang.StrictMath.round;
 
 
@@ -24,10 +25,16 @@ public class Food extends Options {
 
     private Date lastDate = new Date();
 
+
+    /**
+     * Gets meal update which depends on current date
+     *
+     * @param calorieCurrBalance ... - CPCF balance of current day
+     */
     private void getReply(double calorieCurrBalance,
-                         double proteinCurrBalance,
-                         double carbCurrBalance,
-                         double fatCurrBalance) {
+                          double proteinCurrBalance,
+                          double carbCurrBalance,
+                          double fatCurrBalance) {
 
         String lastWaterDate = formatDay(lastDate);
 
@@ -106,6 +113,11 @@ public class Food extends Options {
     }
 
 
+    /**
+     * Creates answer with calculated energy properties
+     *
+     * @return messageText with counted calories, proteins, fats and carbs balance
+     */
     public String showFoodBalance() {
 
         return "Calories: " + round(calorieBalance) + "\n" +

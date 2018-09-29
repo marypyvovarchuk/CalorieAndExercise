@@ -9,7 +9,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -123,8 +122,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
 
         if (messageText.equals("/settings")) {
             storedNameOfTable = "SETTINGS";
-            outMessage.setText("Please enter your weight to\" +\n" +
-                    "                \"make calculations more correct.\\nBut honestly :)");
+            outMessage.setText("Please enter your weight to\n make calculations more correct. But honestly :)");
 
             return outMessage;
         } else if (messageText.equals("FOOD")) {
@@ -263,8 +261,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     public String getBotUsername() {
         return Properties.USER;
     }
-
-
+    
     public String getBotToken() {
         return Properties.TOKEN;
     }

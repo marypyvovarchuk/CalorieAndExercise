@@ -19,7 +19,7 @@ public class Options {
      * water balance updated
      *
      * @param last - Last date stored in String value
-     * @return    - Weight of chosen meal
+     * @return - Weight of chosen meal
      */
     public boolean controlDay(String last) {
 

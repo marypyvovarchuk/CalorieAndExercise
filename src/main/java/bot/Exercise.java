@@ -21,6 +21,13 @@ public class Exercise extends Options {
     private double wastedCalories = 0;
     public int userWeight;
 
+
+    /**
+     * Gets wasted energy update which depends on current date
+     * and exercise.
+     *
+     * @param wastedCurrCalories - wasted energy of current day
+     */
     private void getReply(double wastedCurrCalories) {
 
         String lastWaterDate = formatDay(lastDate);
@@ -53,6 +60,11 @@ public class Exercise extends Options {
     }
 
 
+    /**
+     * Creates answer with calculated wasted energy
+     *
+     * @return messageText with counted wasted energy
+     */
     public String showWastedEnergy() {
 
         return "Congrats!\nYou wasted almost: " +
@@ -93,7 +105,7 @@ public class Exercise extends Options {
                     getReply(calories * interval);
                 }
             }
-           connection.close();
+            connection.close();
         } catch (SQLException c) {
             c.printStackTrace();
         } catch (ClassNotFoundException b) {
