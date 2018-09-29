@@ -105,9 +105,6 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     }
 
 
-
-
-
     /**
      * Replies on user input and responds when
      * buttons have been pressed.

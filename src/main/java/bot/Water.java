@@ -17,6 +17,15 @@ public class Water extends Options {
     int waterBalance = 0;
     private Date lastDate = new Date();
 
+
+    /**
+     * If last water update was not today waterBalance = 0
+     * then added current water in ml. In case last water update
+     * was during current day water input are added to stored
+     * waterBalance.
+     *
+     * @param waterCurrBalance - water input od current day
+     */
     public void getReply(int waterCurrBalance) {
 
         String lastWaterDate = formatDay(lastDate);
