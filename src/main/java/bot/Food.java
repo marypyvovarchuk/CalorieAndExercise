@@ -16,7 +16,7 @@ import static java.lang.StrictMath.round;
  * @since 2018-09-14
  */
 
-public class Food extends Options {
+public class Food  extends Options {
 
     private double calorieBalance = 0;
     private double proteinBalance = 0;
@@ -101,13 +101,7 @@ public class Food extends Options {
                 }
             }
             connection.close();
-        } catch (SQLException c) {
-            c.printStackTrace();
-        } catch (ClassNotFoundException b) {
-            b.printStackTrace();
-        } catch (IllegalAccessException b) {
-            b.printStackTrace();
-        } catch (InstantiationException b) {
+        } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException b) {
             b.printStackTrace();
         }
     }

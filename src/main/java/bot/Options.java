@@ -39,9 +39,8 @@ public class Options {
     public String formatDay(Date date) {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = dateFormat.format(date);
 
-        return formattedDate;
+        return dateFormat.format(date);
     }
 }
 

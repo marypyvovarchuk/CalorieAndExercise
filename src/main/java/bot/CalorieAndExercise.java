@@ -25,7 +25,7 @@ import java.util.List;
 public class CalorieAndExercise extends TelegramLongPollingBot {
 
     private Water water = new Water();
-    public Exercise currExerciseBalance = new Exercise();
+    private Exercise currExerciseBalance = new Exercise();
     private String storedNameOfExercise;
     private Food currMealBalance = new Food();
     private String storedNameOfMeal = "No meal chosen right now";
@@ -112,7 +112,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
      * @return outMessage with instruction which is to be passed
      * to onUpdateReceived method
      */
-    public SendMessage replyOnKeyboard(Update update) {
+    private SendMessage replyOnKeyboard(Update update) {
 
         SendMessage outMessage = new SendMessage();
 
@@ -261,7 +261,7 @@ public class CalorieAndExercise extends TelegramLongPollingBot {
     public String getBotUsername() {
         return Properties.USER;
     }
-    
+
     public String getBotToken() {
         return Properties.TOKEN;
     }

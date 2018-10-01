@@ -19,7 +19,7 @@ public class Exercise extends Options {
 
     private Date lastDate = new Date();
     private double wastedCalories = 0;
-    public int userWeight;
+    int userWeight;
 
 
     /**
@@ -106,13 +106,7 @@ public class Exercise extends Options {
                 }
             }
             connection.close();
-        } catch (SQLException c) {
-            c.printStackTrace();
-        } catch (ClassNotFoundException b) {
-            b.printStackTrace();
-        } catch (IllegalAccessException b) {
-            b.printStackTrace();
-        } catch (InstantiationException b) {
+        } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException b) {
             b.printStackTrace();
         }
     }
